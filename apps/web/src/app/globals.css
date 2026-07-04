@@ -976,14 +976,16 @@ button {
   border-color: var(--line-strong);
   background: var(--panel-2);
 }
-.doc-link-primary {
+/* Higher specificity than `.doc-nav a { color: inherit }` so the white wins. */
+.doc-link.doc-link-primary {
   background: var(--brand);
   color: #fff;
   border-color: var(--brand);
 }
-.doc-link-primary:hover {
+.doc-link.doc-link-primary:hover {
   filter: brightness(1.15);
   background: var(--brand);
+  color: #fff;
 }
 
 /* Hero */

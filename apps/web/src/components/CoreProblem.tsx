@@ -158,6 +158,30 @@ export default function CoreProblem() {
           </div>
         </section>
 
+        {/* Labour movement map (shared with India on the Move) */}
+        <section className="doc-section">
+          <div className="doc-section-head">
+            <div className="doc-kicker">Watch it move</div>
+            <h2 className="doc-h2">Where labour actually is, month by month</h2>
+            <p className="doc-lead">
+              The same movement data, on a map. Red states send workers, green receive them, and the
+              arcs thin and thicken with the season — pick a month to see where supply sits versus
+              where it’s already left. Defaults to the current month.
+            </p>
+          </div>
+
+          <SeasonalMapSection />
+
+          <div className="dual-src" style={{ marginTop: 16 }}>
+            <span>Built from</span>
+            <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
+              Economic Survey 2016-17 <ArrowUpRight width={12} height={12} />
+            </a>
+            <span className="dot">·</span>
+            <span style={{ fontWeight: 500 }}>seasonal model (harvest &amp; monsoon calendar)</span>
+          </div>
+        </section>
+
         {/* Evidence cards */}
         <section className="doc-section">
           <div className="doc-section-head">
@@ -218,30 +242,6 @@ export default function CoreProblem() {
             <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
               Economic Survey 2016-17 <ArrowUpRight width={12} height={12} />
             </a>
-          </div>
-        </section>
-
-        {/* Labour movement map (shared with India on the Move) */}
-        <section className="doc-section">
-          <div className="doc-section-head">
-            <div className="doc-kicker">Watch it move</div>
-            <h2 className="doc-h2">Where labour actually is, month by month</h2>
-            <p className="doc-lead">
-              The same movement data, on a map. Red states send workers, green receive them, and the
-              arcs thin and thicken with the season — pick a month to see where supply sits versus
-              where it’s already left. Defaults to the current month.
-            </p>
-          </div>
-
-          <SeasonalMapSection />
-
-          <div className="dual-src" style={{ marginTop: 16 }}>
-            <span>Built from</span>
-            <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
-              Economic Survey 2016-17 <ArrowUpRight width={12} height={12} />
-            </a>
-            <span className="dot">·</span>
-            <span style={{ fontWeight: 500 }}>seasonal model (harvest &amp; monsoon calendar)</span>
           </div>
         </section>
 
