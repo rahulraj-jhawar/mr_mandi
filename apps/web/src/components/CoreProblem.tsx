@@ -219,46 +219,13 @@ export default function CoreProblem() {
           </div>
         </section>
 
-        {/* Evidence cards */}
-        <section className="doc-section" id="evidence">
-          <div className="doc-section-head">
-            <div className="doc-kicker">The evidence</div>
-            <h2 className="doc-h2">Six numbers that reframe the shortage</h2>
-            <p className="doc-lead">
-              Drawn from the two most authoritative reads on Indian internal migration. Every card
-              links to its source and to the full breakdown.
-            </p>
-          </div>
-          <div className="prob-grid">
-            {EVIDENCE.map((e) => (
-              <div className="prob-card" key={e.label}>
-                <span className={`src-tag ${SRC[e.src].kind}`}>{SRC[e.src].tag}</span>
-                <div className="prob-n">
-                  {e.n}
-                  {e.unit && <small>{e.unit}</small>}
-                </div>
-                <div className="prob-label">{e.label}</div>
-                <p className="prob-insight">{e.insight}</p>
-                <SourceLinks src={e.src} />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* The broker insight */}
+        {/* The broker insight — sits directly below the map */}
         <section className="doc-section">
           <div className="cmm">
             <div className="doc-kicker" style={{ color: '#93c5fd' }}>
               The missing layer
             </div>
             <h2 className="doc-h2">Why brokers, not databases, solve this</h2>
-            <p className="doc-lead">
-              Everyone tries to fix the shortage by indexing individual workers. But in India,
-              verified labour actually moves through intermediaries — thekedars, mukadams, jamadars.
-              That broker layer is what makes sourcing efficient, and it is entirely informal and
-              undiscoverable. Bridging builders to <em>verified</em> brokers on the corridors the data
-              reveals is the unlock.
-            </p>
             <div className="cmm-steps">
               <div className="cmm-step">
                 <div className="idx">1</div>
@@ -287,6 +254,32 @@ export default function CoreProblem() {
           </div>
         </section>
 
+        {/* Evidence cards */}
+        <section className="doc-section" id="evidence">
+          <div className="doc-section-head">
+            <div className="doc-kicker">The evidence</div>
+            <h2 className="doc-h2">Six numbers that reframe the shortage</h2>
+            <p className="doc-lead">
+              Drawn from the two most authoritative reads on Indian internal migration. Every card
+              links to its source and to the full breakdown.
+            </p>
+          </div>
+          <div className="prob-grid">
+            {EVIDENCE.map((e) => (
+              <div className="prob-card" key={e.label}>
+                <span className={`src-tag ${SRC[e.src].kind}`}>{SRC[e.src].tag}</span>
+                <div className="prob-n">
+                  {e.n}
+                  {e.unit && <small>{e.unit}</small>}
+                </div>
+                <div className="prob-label">{e.label}</div>
+                <p className="prob-insight">{e.insight}</p>
+                <SourceLinks src={e.src} />
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="doc-cta">
           <h2>See the flows become sourcing</h2>
@@ -294,7 +287,7 @@ export default function CoreProblem() {
             The live map turns these corridors into verified labour brokers you can source from,
             filtered by trade and skill.
           </p>
-          <Link href="/map" className="doc-link doc-link-primary">
+          <Link href="/map" className="doc-cta-btn">
             <MapPin width={16} height={16} /> Open the live map
           </Link>
         </section>
@@ -320,11 +313,6 @@ export default function CoreProblem() {
               <ArrowUpRight width={16} height={16} />
             </a>
           </div>
-          <p className="source-note" style={{ borderTop: 'none', paddingTop: 18 }}>
-            Headline figures are as reported by the cited sources. Per-state, per-corridor and
-            seasonal magnitudes shown on this page are indicative indices following the published
-            patterns, not official per-cell counts.
-          </p>
         </section>
       </div>
     </div>

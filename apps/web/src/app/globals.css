@@ -1468,6 +1468,31 @@ button {
   padding: 0 24px;
   font-size: 15px;
 }
+/* White CTA button on the dark CTA panel */
+.doc-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 26px;
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--brand);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-md);
+  transition: filter 0.14s, transform 0.08s;
+}
+.doc-cta-btn:hover {
+  filter: brightness(0.94);
+}
+.doc-cta-btn:active {
+  transform: translateY(1px);
+}
+.doc-cta-btn svg {
+  color: var(--brand);
+}
 
 /* Methodology / source */
 .source-note {
