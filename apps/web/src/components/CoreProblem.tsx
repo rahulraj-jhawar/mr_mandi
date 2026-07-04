@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { CORRIDORS, HEADLINE, SEASONALITY, SOURCE } from '../data/migration';
 import { CENSUS_HEADLINE, CENSUS_SOURCE, REASONS } from '../data/census';
-import { ArrowRight, ArrowUpRight, Check, Flow, MapPin } from './icons';
+import { ArrowRight, ArrowUpRight, Check, Flow, MapPin, Users } from './icons';
 import SeasonalMapSection from './SeasonalMapSection';
 
 // Source registry — every card cites one of these, linking to the authoritative
@@ -117,13 +117,18 @@ export default function CoreProblem() {
       <div className="doc-inner">
         {/* Hero */}
         <header className="doc-hero">
-          <span className="eyebrow">
-            <Flow width={14} height={14} /> The core problem
-          </span>
-          <h1 className="doc-h1">
-            India isn’t short of labour.
+          <h1 className="doc-h1 hero-headline">
+            India isn’t short of{' '}
+            <span className="hl green">
+              <Users /> labour
+            </span>
+            .
             <br />
-            It’s short of <span className="grad">the right connection.</span>
+            <span className="hero-dim">It’s short of</span> the right{' '}
+            <span className="hl blue">
+              <Flow /> connection
+            </span>
+            .
           </h1>
           <p className="doc-sub">
             Construction’s “labour shortage” is a misdiagnosis. The workers exist, they move in huge,
