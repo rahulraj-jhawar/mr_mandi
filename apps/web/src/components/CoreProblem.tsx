@@ -17,11 +17,7 @@ export default function CoreProblem() {
           <div className="nav-links">
             <Link href="/map" className="nav-link hide-sm">
               <MapPin width={17} height={17} /> Labour Chowk
-              <span className="nav-new">New</span>
             </Link>
-            <a href="#sources" className="nav-link hide-sm">
-              <Flow width={17} height={17} /> Sources
-            </a>
             <Link href="/map" className="nav-cta">
               Post a requirement <ArrowRight width={16} height={16} />
             </Link>
