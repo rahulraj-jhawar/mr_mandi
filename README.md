@@ -5,7 +5,10 @@ Turborepo monorepo with a TypeScript frontend and backend. No database.
 ## Stack
 
 - **Turborepo** + **pnpm** workspaces
-- `apps/web` — [Next.js 15](https://nextjs.org) (App Router, React 19) on port **3000** — a full-screen, map-first landing app: builders discover verified labour brokers, see predicted labour flows across India, filter by trade/skill, and request sourcing. Uses [Leaflet](https://leafletjs.com) + CARTO basemap.
+- `apps/web` — [Next.js 15](https://nextjs.org) (App Router, React 19) on port **3000**
+  - `/` — a full-screen, map-first landing app: builders discover verified labour brokers, see predicted labour flows across India, filter by trade/skill, and request sourcing. Uses [Leaflet](https://leafletjs.com) + CARTO basemap.
+  - `/india-on-the-move` — a scrollable data-showcase page built on the **Economic Survey 2016-17 "India on the Move"** findings (≈9M inter-state migrants/year, the Cohort-Based Migration Metric, top source/destination states and corridors) — including a **month-filterable seasonal flow map** (defaults to the current month).
+  - `/census-2011` — a data-showcase page built on the **Census 2011 D-series migration tables**: the state-to-state work-migration **origin–destination matrix** (heatmap), reason-for-migration by sex (All/Male/Female toggle), rural-urban streams and duration of residence.
 - `apps/api` — [NestJS 11](https://nestjs.com) on port **3001**
 
 ## Getting started
