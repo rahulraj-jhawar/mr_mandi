@@ -116,6 +116,8 @@ interface Props {
   showFlows: boolean;
   onSelect: (id: string) => void;
   fly: FlyTarget | null;
+  zoomControl?: boolean;
+  scrollWheelZoom?: boolean;
 }
 
 export default function MapView({
@@ -126,6 +128,8 @@ export default function MapView({
   showFlows,
   onSelect,
   fly,
+  zoomControl = false,
+  scrollWheelZoom = true,
 }: Props) {
   return (
     <MapContainer
@@ -133,7 +137,8 @@ export default function MapView({
       zoom={5}
       minZoom={4}
       maxZoom={13}
-      zoomControl={false}
+      zoomControl={zoomControl}
+      scrollWheelZoom={scrollWheelZoom}
       attributionControl
       style={{ width: '100%', height: '100%' }}
     >

@@ -121,10 +121,10 @@ export default function App() {
           <div className="trade-dd">
             <button className="dropdown-toggle" onClick={() => setTradeOpen((o) => !o)}>
               <span className="filter-title" style={{ margin: 0 }}>
-                Trade
+                Skill
               </span>
               <span className="dropdown-value">
-                {trades.size > 0 ? `${trades.size} selected` : 'All trades'}
+                {trades.size > 0 ? `${trades.size} selected` : 'All skills'}
                 <ChevronDown width={15} height={15} className={tradeOpen ? 'chev open' : 'chev'} />
               </span>
             </button>

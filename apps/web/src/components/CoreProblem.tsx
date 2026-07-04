@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { SOURCE } from '../data/migration';
-import { ArrowRight, ArrowUpRight, Flow, MapPin, Users } from './icons';
-import SeasonalMapSection from './SeasonalMapSection';
+import { ArrowRight, Flow, MapPin, Users } from './icons';
+import ChowkPreview from './ChowkPreview';
 import Footer from './Footer';
 
 export default function CoreProblem() {
@@ -43,23 +42,14 @@ export default function CoreProblem() {
           </h1>
         </header>
 
-        {/* Labour movement map */}
+        {/* Labour Chowk preview */}
         <section className="doc-section" style={{ paddingTop: 8 }}>
           <div className="doc-section-head">
-            <div className="doc-kicker">Watch it move</div>
-            <h2 className="doc-h2">Where labour actually is, month by month</h2>
+            <div className="doc-kicker">Labour Chowk</div>
+            <h2 className="doc-h2">Where labour actually is, right now</h2>
           </div>
 
-          <SeasonalMapSection />
-
-          <div className="dual-src" style={{ marginTop: 16 }}>
-            <span>Built from</span>
-            <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
-              Economic Survey 2016-17 <ArrowUpRight width={12} height={12} />
-            </a>
-            <span className="dot">·</span>
-            <span style={{ fontWeight: 500 }}>seasonal model (harvest &amp; monsoon calendar)</span>
-          </div>
+          <ChowkPreview />
         </section>
 
         {/* CTA */}
