@@ -1,0 +1,513 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API for a labour-sourcing platform connecting construction builders with verified labour brokers across India.
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: requirements
+    description: Builder-posted labour requirements
+  - name: brokers
+    description: Labour broker directory and capacity
+  - name: labor-flow
+    description: Historical and predicted labour flow by region
+  - name: dashboard
+    description: Aggregate stats
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /requirements:
+    get:
+      operationId: listRequirements
+      tags: [requirements]
+      summary: List labour requirements
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/RequirementStatus"
+        - name: brokerId
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of requirements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Requirement"
+    post:
+      operationId: createRequirement
+      tags: [requirements]
+      summary: Post a new labour requirement (builder)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRequirementInput"
+      responses:
+        "201":
+          description: Created requirement, auto-routed to nearest available broker
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Requirement"
+
+  /requirements/{id}:
+    get:
+      operationId: getRequirement
+      tags: [requirements]
+      summary: Get a single requirement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Requirement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Requirement"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateRequirementStatus
+      tags: [requirements]
+      summary: Broker updates requirement status (accept/fulfill/decline)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRequirementStatusInput"
+      responses:
+        "200":
+          description: Updated requirement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Requirement"
+        "404":
+          description: Not found
+
+  /brokers:
+    get:
+      operationId: listBrokers
+      tags: [brokers]
+      summary: List labour brokers
+      parameters:
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of brokers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Broker"
+    post:
+      operationId: createBroker
+      tags: [brokers]
+      summary: Register a new labour broker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBrokerInput"
+      responses:
+        "201":
+          description: Created broker
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Broker"
+
+  /brokers/{id}:
+    get:
+      operationId: getBroker
+      tags: [brokers]
+      summary: Get a single broker
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Broker
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Broker"
+        "404":
+          description: Not found
+
+  /labor-flow:
+    get:
+      operationId: listLaborFlowRegions
+      tags: [labor-flow]
+      summary: Historical and predicted labour flow by Indian state, for map sourcing guidance
+      responses:
+        "200":
+          description: List of region labour flow records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LaborFlowRegion"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Aggregate stats for the landing/overview view
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    SkillType:
+      type: string
+      enum:
+        - mason
+        - carpenter
+        - electrician
+        - plumber
+        - painter
+        - welder
+        - bar_bender
+        - fitter
+        - unskilled_helper
+        - general_labour
+
+    LaborTier:
+      type: string
+      enum:
+        - skilled
+        - semi_skilled
+        - unskilled
+
+    RequirementStatus:
+      type: string
+      enum:
+        - pending
+        - routed
+        - accepted
+        - fulfilled
+        - declined
+        - cancelled
+
+    Requirement:
+      type: object
+      properties:
+        id:
+          type: string
+        builderName:
+          type: string
+        companyName:
+          type: string
+        projectName:
+          type: string
+        siteCity:
+          type: string
+        siteState:
+          type: string
+        skillType:
+          $ref: "#/components/schemas/SkillType"
+        laborTier:
+          $ref: "#/components/schemas/LaborTier"
+        workersNeeded:
+          type: integer
+        startDate:
+          type: string
+          format: date
+        durationDays:
+          type: integer
+        wagePerDay:
+          type: number
+        notes:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/RequirementStatus"
+        routedBrokerId:
+          type: string
+          nullable: true
+        routedBrokerName:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - builderName
+        - companyName
+        - projectName
+        - siteCity
+        - siteState
+        - skillType
+        - laborTier
+        - workersNeeded
+        - startDate
+        - durationDays
+        - wagePerDay
+        - status
+        - createdAt
+
+    CreateRequirementInput:
+      type: object
+      properties:
+        builderName:
+          type: string
+        companyName:
+          type: string
+        projectName:
+          type: string
+        siteCity:
+          type: string
+        siteState:
+          type: string
+        skillType:
+          $ref: "#/components/schemas/SkillType"
+        laborTier:
+          $ref: "#/components/schemas/LaborTier"
+        workersNeeded:
+          type: integer
+          minimum: 1
+        startDate:
+          type: string
+          format: date
+        durationDays:
+          type: integer
+          minimum: 1
+        wagePerDay:
+          type: number
+          minimum: 0
+        notes:
+          type: string
+      required:
+        - builderName
+        - companyName
+        - projectName
+        - siteCity
+        - siteState
+        - skillType
+        - laborTier
+        - workersNeeded
+        - startDate
+        - durationDays
+        - wagePerDay
+
+    UpdateRequirementStatusInput:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/RequirementStatus"
+      required:
+        - status
+
+    Broker:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        agencyName:
+          type: string
+        phone:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        skillsCovered:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillType"
+        laborPoolSize:
+          type: integer
+        availableCapacity:
+          type: integer
+        rating:
+          type: number
+        verified:
+          type: boolean
+        activeRequirements:
+          type: integer
+        fulfilledRequirements:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - agencyName
+        - phone
+        - city
+        - state
+        - skillsCovered
+        - laborPoolSize
+        - availableCapacity
+        - rating
+        - verified
+        - activeRequirements
+        - fulfilledRequirements
+        - createdAt
+
+    CreateBrokerInput:
+      type: object
+      properties:
+        name:
+          type: string
+        agencyName:
+          type: string
+        phone:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        skillsCovered:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillType"
+        laborPoolSize:
+          type: integer
+          minimum: 0
+        availableCapacity:
+          type: integer
+          minimum: 0
+      required:
+        - name
+        - agencyName
+        - phone
+        - city
+        - state
+        - skillsCovered
+        - laborPoolSize
+        - availableCapacity
+
+    LaborFlowTrend:
+      type: string
+      enum:
+        - net_source
+        - net_destination
+        - balanced
+
+    LaborFlowRegion:
+      type: object
+      properties:
+        state:
+          type: string
+        historicalOutflow:
+          type: integer
+          description: Estimated workers historically migrating out of this state annually
+        predictedOutflow:
+          type: integer
+          description: Predicted workers likely to migrate out over the next season
+        demandIndex:
+          type: number
+          description: Relative builder demand pressure originating from this state, 0-100
+        supplyIndex:
+          type: number
+          description: Relative available labour supply retained/sourced in this state, 0-100
+        stabilityScore:
+          type: number
+          description: How likely sourced labour is to stay committed without moving on, 0-100
+        trend:
+          $ref: "#/components/schemas/LaborFlowTrend"
+        topSkills:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillType"
+        activeBrokers:
+          type: integer
+      required:
+        - state
+        - historicalOutflow
+        - predictedOutflow
+        - demandIndex
+        - supplyIndex
+        - stabilityScore
+        - trend
+        - topSkills
+        - activeBrokers
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalRequirements:
+          type: integer
+        pendingRequirements:
+          type: integer
+        fulfilledRequirements:
+          type: integer
+        totalBrokers:
+          type: integer
+        totalLaborPool:
+          type: integer
+        totalAvailableCapacity:
+          type: integer
+        avgRoutingMinutes:
+          type: number
+      required:
+        - totalRequirements
+        - pendingRequirements
+        - fulfilledRequirements
+        - totalBrokers
+        - totalLaborPool
+        - totalAvailableCapacity
+        - avgRoutingMinutes

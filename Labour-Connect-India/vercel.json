@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "pnpm install --config.verify-deps-before-run=false",
+  "buildCommand": "BASE_PATH=/ PORT=5173 NODE_ENV=production pnpm --filter @workspace/shramsetu --config.verify-deps-before-run=false run build",
+  "outputDirectory": "artifacts/shramsetu/dist/public",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api?__p=/$1" },
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ]
+}
