@@ -41,7 +41,7 @@ export default function ChowkPreview() {
           flows={FLOWS}
           brokerIndex={brokerIndex}
           selectedId={selectedId}
-          showFlows
+          showFlows={false}
           onSelect={select}
           fly={fly}
           zoomControl
@@ -53,9 +53,6 @@ export default function ChowkPreview() {
           </span>
           <span>
             <i style={{ background: '#16a34a' }} /> Receives workers
-          </span>
-          <span>
-            <i className="ln" /> Seasonal flow
           </span>
         </div>
         <Link href="/labour-chowk" className="chowk-expand" aria-label="Expand to Labour Chowk">
