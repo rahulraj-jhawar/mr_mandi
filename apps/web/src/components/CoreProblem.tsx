@@ -130,12 +130,6 @@ export default function CoreProblem() {
             </span>
             .
           </h1>
-          <p className="doc-sub">
-            Construction’s “labour shortage” is a misdiagnosis. The workers exist, they move in huge,
-            predictable, seasonal flows — but builders can’t reach verified supply because the layer
-            that actually moves it, the labour broker, is informal and invisible. Here’s the evidence,
-            each point sourced.
-          </p>
         </header>
 
         {/* Misdiagnosis vs reality */}
