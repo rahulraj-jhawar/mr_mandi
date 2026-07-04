@@ -2358,11 +2358,17 @@ table.matrix .cell:hover {
 /* Checkbox (predictable labour flow) */
 .checkrow {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   cursor: pointer;
   width: 100%;
   text-align: left;
+  border-radius: 8px;
+  outline: none;
+}
+.checkrow:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .checkbox {
   width: 20px;
@@ -2373,7 +2379,6 @@ table.matrix .cell:hover {
   display: grid;
   place-items: center;
   transition: all 0.14s;
-  margin-top: 1px;
 }
 .checkrow:hover .checkbox {
   border-color: var(--accent);

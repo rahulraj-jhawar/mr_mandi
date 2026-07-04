@@ -186,10 +186,7 @@ export default function App() {
             aria-pressed={showFlows}
           >
             <span className={`checkbox ${showFlows ? 'on' : ''}`} />
-            <span>
-              <span className="ck-label">Show predictable labour flow</span>
-              <span className="ck-sub">Overlay seasonal source → demand corridors</span>
-            </span>
+            <span className="ck-label">Show predictable labour flow</span>
           </button>
           <div className="legend-item">
             <span className="legend-swatch" style={{ background: 'var(--source)' }} /> Surplus —
