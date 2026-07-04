@@ -2560,3 +2560,84 @@ button:disabled,
 [aria-disabled='true'] {
   cursor: not-allowed;
 }
+
+/* ---- Trade dropdown filter ---- */
+.trade-dd {
+  position: relative;
+}
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+.dropdown-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.dropdown-value .chev {
+  color: var(--muted);
+  transition: transform 0.16s;
+}
+.dropdown-value .chev.open {
+  transform: rotate(180deg);
+}
+.dd-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 590;
+}
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 600;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: left;
+}
+.dropdown-item:hover {
+  background: var(--panel-2);
+}
+.checkbox.sm {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  border-width: 2px;
+}
+.checkbox.sm.on::after {
+  width: 4px;
+  height: 7px;
+}
+.dropdown-clear {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent);
+}

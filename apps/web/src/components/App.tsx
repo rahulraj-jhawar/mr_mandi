@@ -15,7 +15,17 @@ import {
 import type { FlyTarget } from './MapView';
 import DetailPanel from './DetailPanel';
 import RequestModal from './RequestModal';
-import { ArrowRight, MapPin, Plus, Search, ShieldCheck, Sliders, Star, Users } from './icons';
+import {
+  ArrowRight,
+  ChevronDown,
+  MapPin,
+  Plus,
+  Search,
+  ShieldCheck,
+  Sliders,
+  Star,
+  Users,
+} from './icons';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
@@ -44,6 +54,7 @@ export default function App() {
   const [kinds, setKinds] = useState<Set<HubKind>>(new Set(['source', 'demand', 'balanced']));
   const [trades, setTrades] = useState<Set<Trade>>(new Set());
   const [showFlows, setShowFlows] = useState(false);
+  const [tradeOpen, setTradeOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [fly, setFly] = useState<FlyTarget | null>(null);
   const [modal, setModal] = useState<{ open: boolean; broker: Broker | null }>({
@@ -163,19 +174,38 @@ export default function App() {
           </div>
         </div>
 
-        <div className="card card-pad">
-          <div className="filter-title">Trade</div>
-          <div className="chip-row">
-            {TRADES.map((t) => (
-              <button
-                key={t}
-                className={`chip ${trades.has(t) ? 'active' : ''}`}
-                onClick={() => toggleTrade(t)}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+        <div className="card card-pad trade-dd">
+          <button className="dropdown-toggle" onClick={() => setTradeOpen((o) => !o)}>
+            <span className="filter-title" style={{ margin: 0 }}>
+              Trade
+            </span>
+            <span className="dropdown-value">
+              {trades.size > 0 ? `${trades.size} selected` : 'All trades'}
+              <ChevronDown
+                width={15}
+                height={15}
+                className={tradeOpen ? 'chev open' : 'chev'}
+              />
+            </span>
+          </button>
+          {tradeOpen && (
+            <>
+              <div className="dd-backdrop" onClick={() => setTradeOpen(false)} />
+              <div className="dropdown-menu">
+                {TRADES.map((t) => (
+                  <button key={t} className="dropdown-item" onClick={() => toggleTrade(t)}>
+                    <span className={`checkbox sm ${trades.has(t) ? 'on' : ''}`} />
+                    {t}
+                  </button>
+                ))}
+                {trades.size > 0 && (
+                  <button className="dropdown-clear" onClick={() => setTrades(new Set())}>
+                    Clear selection
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="card card-pad">

@@ -341,11 +341,10 @@ const RAW_BROKERS: RawBroker[] = [
 // Derive profile fields deterministically so we don't hand-maintain 17 profiles.
 function augment(raw: RawBroker[]): Broker[] {
   const withProfile = raw.map((b, i) => {
-    const gender = i % 4 === 3 ? 'women' : 'men';
-    const num = (i * 13 + 7) % 90;
+    // Curated, self-hosted Indian portrait photos, cycled across brokers.
     return {
       ...b,
-      photo: `https://randomuser.me/api/portraits/${gender}/${num}.jpg`,
+      photo: `/brokers/b${(i % 10) + 1}.jpg`,
       placements: Math.round(1200 + b.rating * 900 + i * 130),
       fulfilmentRate: Math.min(99, Math.round(80 + b.rating * 3 + (i % 4))),
       mobilizationDays: Math.max(2, Math.round(9 - b.rating + (i % 3))),
