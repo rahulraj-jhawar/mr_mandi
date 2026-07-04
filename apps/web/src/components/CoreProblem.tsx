@@ -55,7 +55,8 @@ export default function CoreProblem() {
         {/* CTA */}
         <section className="doc-cta">
           <h2>Mistri Mandi, Your Site never stops</h2>
-          <Link href="/labour-chowk" className="doc-cta-btn" style={{ marginTop: 8 }}>
+          <p>Verified labour. Fast replacement. Zero site delay.</p>
+          <Link href="/labour-chowk" className="doc-cta-btn">
             <MapPin width={16} height={16} /> Open Labour Chowk
           </Link>
         </section>
