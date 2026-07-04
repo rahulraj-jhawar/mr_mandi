@@ -1,13 +1,15 @@
-# Mr Mandi
+# Mistri Mandi
 
 Turborepo monorepo with a TypeScript frontend and backend. No database.
+
+Mistri Mandi connects construction builders with verified labour brokers across India. **Labour Chowk** is the live map of vetted sourcing partners.
 
 ## Stack
 
 - **Turborepo** + **pnpm** workspaces
 - `apps/web` — [Next.js 15](https://nextjs.org) (App Router, React 19) on port **3000**
   - `/` — the **home / core-problem** page: states the thesis (India isn't short of labour, it's short of the right connection) and backs each claim with the strongest data point from Census 2011 and the Economic Survey 2016-17. Every card and section cites its source with a hyperlink, and it embeds the month-filterable seasonal movement map (defaults to the current month).
-  - `/map` — a full-screen, map-first app: builders discover verified labour brokers, see predicted labour flows across India, filter by trade/skill, and request sourcing. Uses [Leaflet](https://leafletjs.com) + CARTO basemap.
+  - `/map` — **Labour Chowk**: a full-screen map where builders discover verified labour brokers shown as profile-photo markers (clustered by count on zoom-out, individual profiles on zoom-in), open a broker profile (rank, ratings, reviews, sourcing metrics, worker pool), toggle predictable seasonal labour flows, and post a requirement. Uses [Leaflet](https://leafletjs.com) + [markercluster](https://github.com/Leaflet/Leaflet.markercluster) + CARTO basemap.
 - `apps/api` — [NestJS 11](https://nestjs.com) on port **3001**
 
 ## Getting started

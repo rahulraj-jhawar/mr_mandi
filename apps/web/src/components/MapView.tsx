@@ -1,27 +1,38 @@
 'use client';
 
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 import L from 'leaflet';
+import 'leaflet.markercluster';
 import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, Tooltip, useMap } from 'react-leaflet';
-import { type Broker, type Flow, poolTotal } from '../data/labour';
+import { MapContainer, TileLayer, Polyline, useMap } from 'react-leaflet';
+import { type Broker, type Flow } from '../data/labour';
 
-const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : `${n}`);
-
-function brokerIcon(b: Broker, active: boolean) {
-  const kindClass = `pin-${b.kind}`;
-  const pulse = b.kind === 'demand' ? '<span class="pin-pulse"></span>' : '';
-  const label = fmtK(poolTotal(b.pool));
+function avatarIcon(b: Broker, active: boolean) {
   return L.divIcon({
-    className: 'pin-wrap',
-    html: `<div class="pin ${kindClass} ${active ? 'active' : ''}">${pulse}<span class="pin-bubble">${label}</span></div>`,
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
+    className: '',
+    html: `<div class="avatar-pin pin-${b.kind} ${active ? 'active' : ''}">
+        <img src="${b.photo}" alt="" loading="lazy" onerror="this.style.display='none'" />
+        ${b.verified ? '<span class="avatar-tick"></span>' : ''}
+      </div>`,
+    iconSize: [48, 48],
+    iconAnchor: [24, 24],
   });
 }
 
-// Quadratic-bezier samples between two points, bowed perpendicular to the chord
-// so labour flows read as arcs rather than straight lines.
+function clusterIcon(cluster: L.MarkerCluster) {
+  const count = cluster.getChildCount();
+  const size = count < 5 ? 44 : count < 10 ? 52 : 60;
+  return L.divIcon({
+    className: '',
+    html: `<div class="cluster" style="width:${size}px;height:${size}px">
+        <span>${count}</span><small>brokers</small>
+      </div>`,
+    iconSize: [size, size],
+  });
+}
+
+// Curved arc between two points for the (optional) flow layer.
 function arcPoints(a: [number, number], b: [number, number], bend = 0.22): [number, number][] {
   const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
   const dLat = b[0] - a[0];
@@ -32,11 +43,53 @@ function arcPoints(a: [number, number], b: [number, number], bend = 0.22): [numb
   for (let i = 0; i <= N; i++) {
     const t = i / N;
     const u = 1 - t;
-    const lat = u * u * a[0] + 2 * u * t * ctrl[0] + t * t * b[0];
-    const lng = u * u * a[1] + 2 * u * t * ctrl[1] + t * t * b[1];
-    pts.push([lat, lng]);
+    pts.push([
+      u * u * a[0] + 2 * u * t * ctrl[0] + t * t * b[0],
+      u * u * a[1] + 2 * u * t * ctrl[1] + t * t * b[1],
+    ]);
   }
   return pts;
+}
+
+// Imperative marker-cluster layer (react-leaflet has no v5 wrapper for it).
+function BrokerClusterLayer({
+  brokers,
+  selectedId,
+  onSelect,
+}: {
+  brokers: Broker[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+}) {
+  const map = useMap();
+  useEffect(() => {
+    const group = L.markerClusterGroup({
+      maxClusterRadius: 55,
+      showCoverageOnHover: false,
+      spiderfyOnMaxZoom: true,
+      iconCreateFunction: clusterIcon,
+    });
+    const markers = brokers.map((b) => {
+      const m = L.marker([b.lat, b.lng], {
+        icon: avatarIcon(b, b.id === selectedId),
+        zIndexOffset: b.id === selectedId ? 1000 : 0,
+      });
+      m.on('click', () => onSelect(b.id));
+      m.bindTooltip(`${b.city} · ${b.name}`, {
+        direction: 'top',
+        offset: [0, -26],
+        className: 'pin-tip',
+        opacity: 1,
+      });
+      return m;
+    });
+    group.addLayers(markers);
+    map.addLayer(group);
+    return () => {
+      map.removeLayer(group);
+    };
+  }, [brokers, selectedId, map, onSelect]);
+  return null;
 }
 
 export interface FlyTarget {
@@ -49,7 +102,7 @@ export interface FlyTarget {
 function MapController({ fly }: { fly: FlyTarget | null }) {
   const map = useMap();
   useEffect(() => {
-    if (fly) map.flyTo([fly.lat, fly.lng], fly.zoom ?? 7, { duration: 0.9 });
+    if (fly) map.flyTo([fly.lat, fly.lng], fly.zoom ?? 8, { duration: 0.9 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fly?.key]);
   return null;
@@ -79,7 +132,7 @@ export default function MapView({
       center={[22.4, 80]}
       zoom={5}
       minZoom={4}
-      maxZoom={12}
+      maxZoom={13}
       zoomControl={false}
       attributionControl
       style={{ width: '100%', height: '100%' }}
@@ -106,27 +159,14 @@ export default function MapView({
                 className: 'flow-path',
                 color: active ? '#2563eb' : '#94a3b8',
                 weight: active ? weight + 1 : weight,
-                opacity: selectedId && !active ? 0.25 : 0.7,
+                opacity: selectedId && !active ? 0.25 : 0.65,
                 lineCap: 'round',
               }}
             />
           );
         })}
 
-      {brokers.map((b) => (
-        <Marker
-          key={b.id}
-          position={[b.lat, b.lng]}
-          icon={brokerIcon(b, selectedId === b.id)}
-          zIndexOffset={selectedId === b.id ? 1000 : b.kind === 'demand' ? 400 : 200}
-          eventHandlers={{ click: () => onSelect(b.id) }}
-        >
-          <Tooltip direction="top" offset={[0, -20]} className="pin-tip" opacity={1}>
-            {b.city} · {b.name}
-          </Tooltip>
-        </Marker>
-      ))}
-
+      <BrokerClusterLayer brokers={brokers} selectedId={selectedId} onSelect={onSelect} />
       <MapController fly={fly} />
     </MapContainer>
   );

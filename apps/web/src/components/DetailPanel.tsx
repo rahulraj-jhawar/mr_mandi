@@ -1,6 +1,6 @@
 'use client';
 
-import { type Broker, type Flow, poolTotal } from '../data/labour';
+import { type Broker, type Flow, poolTotal, reviewsFor } from '../data/labour';
 import {
   ArrowRight,
   Check,
@@ -11,6 +11,14 @@ import {
   ShieldCheck,
   Star,
 } from './icons';
+
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
 
 const kindLabel: Record<Broker['kind'], string> = {
   source: 'Labour surplus · source here',
@@ -40,27 +48,63 @@ export default function DetailPanel({
   const total = poolTotal(broker.pool);
   const pct = (n: number) => `${(n / total) * 100}%`;
   const related = flows.filter((f) => f.from === broker.id || f.to === broker.id);
+  const reviews = reviewsFor(broker);
 
   return (
     <div className="detail card">
       <div className="detail-head">
-        <span className={`kind-tag kind-${broker.kind}`}>{kindLabel[broker.kind]}</span>
         <button className="detail-close" onClick={onClose} aria-label="Close">
           <Close width={16} height={16} />
         </button>
-        <div className="detail-name">{broker.name}</div>
-        <div className="detail-loc">
-          <MapPin width={14} height={14} />
-          {broker.city}, {broker.state}
-          {broker.verified && (
-            <span className="verified-badge" style={{ marginLeft: 6 }}>
-              <ShieldCheck width={13} height={13} /> Verified
-            </span>
-          )}
+        <div className="detail-profile">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="detail-avatar" src={broker.photo} alt={broker.name} />
+          <div style={{ minWidth: 0 }}>
+            <div className="detail-name" style={{ margin: '0 0 4px', paddingRight: 30 }}>
+              {broker.name}
+            </div>
+            <div className="detail-loc">
+              <MapPin width={14} height={14} />
+              {broker.city}, {broker.state}
+            </div>
+            <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+              <span className={`kind-tag kind-${broker.kind}`}>{kindLabel[broker.kind]}</span>
+              {broker.verified && (
+                <span className="verified-badge">
+                  <ShieldCheck width={13} height={13} /> Verified
+                </span>
+              )}
+              <span className="rank-chip">
+                <Star width={11} height={11} /> #{broker.rank} nationally
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="detail-body">
+        <div>
+          <div className="detail-section-title">Sourcing metrics</div>
+          <div className="metric-grid">
+            <div className="metric">
+              <div className="metric-n">{fmt(broker.placements)}</div>
+              <div className="metric-l">Workers placed</div>
+            </div>
+            <div className="metric">
+              <div className="metric-n">{broker.fulfilmentRate}%</div>
+              <div className="metric-l">Fulfilment rate</div>
+            </div>
+            <div className="metric">
+              <div className="metric-n">{broker.mobilizationDays} days</div>
+              <div className="metric-l">Avg. mobilization</div>
+            </div>
+            <div className="metric">
+              <div className="metric-n">{broker.repeatRate}%</div>
+              <div className="metric-l">Repeat clients</div>
+            </div>
+          </div>
+        </div>
+
         <div className="note-box">
           <FlowIcon width={16} height={16} style={{ flexShrink: 0, marginTop: 1 }} />
           <span>{broker.note}</span>
@@ -113,6 +157,9 @@ export default function DetailPanel({
             <span className="kv-v" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
               <Star width={14} height={14} style={{ color: '#f59e0b' }} />
               {broker.rating.toFixed(1)}
+              <span style={{ color: 'var(--muted)', fontWeight: 500 }}>
+                ({fmt(broker.reviewsCount)})
+              </span>
             </span>
           </div>
           <div className="kv">
@@ -126,6 +173,27 @@ export default function DetailPanel({
               {broker.contact}
             </span>
           </div>
+        </div>
+
+        <div>
+          <div className="detail-section-title">Reviews · {fmt(broker.reviewsCount)}</div>
+          {reviews.map((rv, i) => (
+            <div className="review" key={i}>
+              <div className="review-top">
+                <span className="review-av">{initials(rv.author)}</span>
+                <div style={{ minWidth: 0 }}>
+                  <div className="review-who">{rv.author}</div>
+                  <div className="review-role">{rv.role}</div>
+                </div>
+                <span className="review-stars">
+                  {Array.from({ length: rv.rating }).map((_, s) => (
+                    <Star key={s} width={11} height={11} />
+                  ))}
+                </span>
+              </div>
+              <div className="review-text">{rv.text}</div>
+            </div>
+          ))}
         </div>
 
         {related.length > 0 && (

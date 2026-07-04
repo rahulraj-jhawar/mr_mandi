@@ -38,7 +38,20 @@ export interface Broker {
   dayRate: [number, number]; // ₹ per day range
   // A short model note explaining why this hub matters.
   note: string;
+  // --- profile fields (derived) ---
+  photo: string; // profile photo url
+  placements: number; // total workers placed
+  fulfilmentRate: number; // % of requirements fulfilled
+  mobilizationDays: number; // avg days to mobilize a crew
+  repeatRate: number; // % repeat clients
+  reviewsCount: number;
+  rank: number; // national rank among brokers on the platform
 }
+
+type RawBroker = Omit<
+  Broker,
+  'photo' | 'placements' | 'fulfilmentRate' | 'mobilizationDays' | 'repeatRate' | 'reviewsCount' | 'rank'
+>;
 
 export interface Flow {
   from: string; // broker id (origin / surplus)
@@ -47,7 +60,7 @@ export interface Flow {
   trend: 'rising' | 'steady' | 'cooling';
 }
 
-export const BROKERS: Broker[] = [
+const RAW_BROKERS: RawBroker[] = [
   // ---- Surplus / origin hubs (where verified labour is available to source) ----
   {
     id: 'patna',
@@ -325,6 +338,30 @@ export const BROKERS: Broker[] = [
   },
 ];
 
+// Derive profile fields deterministically so we don't hand-maintain 17 profiles.
+function augment(raw: RawBroker[]): Broker[] {
+  const withProfile = raw.map((b, i) => {
+    const gender = i % 4 === 3 ? 'women' : 'men';
+    const num = (i * 13 + 7) % 90;
+    return {
+      ...b,
+      photo: `https://randomuser.me/api/portraits/${gender}/${num}.jpg`,
+      placements: Math.round(1200 + b.rating * 900 + i * 130),
+      fulfilmentRate: Math.min(99, Math.round(80 + b.rating * 3 + (i % 4))),
+      mobilizationDays: Math.max(2, Math.round(9 - b.rating + (i % 3))),
+      repeatRate: Math.round(46 + b.rating * 7 + (i % 5) * 2),
+      reviewsCount: Math.round(24 + b.rating * 30 + i * 7),
+    };
+  });
+  const order = [...withProfile].sort(
+    (a, b) => b.rating * 100 + b.fulfilmentRate - (a.rating * 100 + a.fulfilmentRate),
+  );
+  const rankById = new Map(order.map((b, idx) => [b.id, idx + 1]));
+  return withProfile.map((b) => ({ ...b, rank: rankById.get(b.id) ?? 0 }));
+}
+
+export const BROKERS: Broker[] = augment(RAW_BROKERS);
+
 export const FLOWS: Flow[] = [
   { from: 'patna', to: 'delhi', workers: 4200, trend: 'rising' },
   { from: 'patna', to: 'mumbai', workers: 3100, trend: 'steady' },
@@ -341,6 +378,28 @@ export const FLOWS: Flow[] = [
   { from: 'guwahati', to: 'chennai', workers: 900, trend: 'rising' },
   { from: 'jaipur', to: 'surat', workers: 1200, trend: 'steady' },
 ];
+
+export interface Review {
+  author: string;
+  role: string;
+  rating: number;
+  text: string;
+}
+
+const REVIEW_POOL: Review[] = [
+  { author: 'Rajesh K.', role: 'Site Engineer, Pune', rating: 5, text: 'Mobilized 40 masons in 4 days for our slab work. Verified IDs, no drop-offs.' },
+  { author: 'Anil Constructions', role: 'Contractor, Mumbai', rating: 5, text: 'Reliable crews every monsoon when everyone else struggles. Fair rates.' },
+  { author: 'S. Reddy', role: 'PM, Hyderabad', rating: 4, text: 'Good bar-benders and shuttering carpenters. Paperwork was clean.' },
+  { author: 'Meena Builders', role: 'Developer, Surat', rating: 5, text: 'Sourced 120 helpers from Odisha on schedule. Repeat partner for us now.' },
+  { author: 'Karan S.', role: 'Foreman, Delhi NCR', rating: 4, text: 'Skilled painters, showed up on time. Would book again for finishing work.' },
+  { author: 'GreenSpace Infra', role: 'Contractor, Bengaluru', rating: 5, text: 'Handled a last-minute 60-worker requirement. Transparent on wages.' },
+];
+
+// Two stable reviews per broker, chosen deterministically by id length + rank.
+export function reviewsFor(b: Broker): Review[] {
+  const start = (b.name.length + b.rank) % REVIEW_POOL.length;
+  return [REVIEW_POOL[start], REVIEW_POOL[(start + 2) % REVIEW_POOL.length]];
+}
 
 export const TRADES: Trade[] = [
   'Mason',

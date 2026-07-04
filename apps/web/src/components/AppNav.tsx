@@ -8,7 +8,7 @@ import { Compass, MapPin } from './icons';
 // icon + label items with tooltips and an active state.
 const ITEMS = [
   { href: '/', label: 'Problem', icon: Compass, tip: 'The core problem, explained' },
-  { href: '/map', label: 'Map', icon: MapPin, tip: 'Source labour on the live map' },
+  { href: '/map', label: 'Labour Chowk', icon: MapPin, tip: 'Source verified labour brokers on the map' },
 ];
 
 export default function AppNav() {

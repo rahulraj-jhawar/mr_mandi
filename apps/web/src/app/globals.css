@@ -2268,3 +2268,259 @@ table.matrix .cell:hover {
     display: none;
   }
 }
+
+/* ---- Broker avatar markers + clusters (Labour Chowk map) ---- */
+.avatar-pin {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: var(--panel-2);
+  box-shadow: 0 0 0 2px var(--ring, var(--muted)), 0 3px 9px rgba(15, 23, 42, 0.28);
+  position: relative;
+  transition: transform 0.12s;
+  cursor: pointer;
+}
+.avatar-pin img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.avatar-pin.pin-source {
+  --ring: var(--source);
+}
+.avatar-pin.pin-demand {
+  --ring: var(--demand);
+}
+.avatar-pin.pin-balanced {
+  --ring: var(--balanced);
+}
+.avatar-pin:hover {
+  transform: scale(1.1);
+  z-index: 500;
+}
+.avatar-pin.active {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 3px var(--accent), 0 5px 14px rgba(15, 23, 42, 0.3);
+}
+.avatar-tick {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  display: grid;
+  place-items: center;
+}
+.avatar-tick::after {
+  content: '';
+  width: 4px;
+  height: 7px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.cluster {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #111827, #334155);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 13px rgba(15, 23, 42, 0.32);
+  transition: transform 0.12s;
+}
+.cluster:hover {
+  transform: scale(1.06);
+}
+.cluster span {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+}
+.cluster small {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.72;
+  margin-top: 1px;
+}
+
+/* Checkbox (predictable labour flow) */
+.checkrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--line-strong);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  transition: all 0.14s;
+  margin-top: 1px;
+}
+.checkrow:hover .checkbox {
+  border-color: var(--accent);
+}
+.checkbox.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.checkbox.on::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-1px);
+}
+.checkrow .ck-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.checkrow .ck-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ---- Results list avatar + rank ---- */
+.broker-row-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.row-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--panel-2);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--line);
+  flex-shrink: 0;
+}
+.rank-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  padding: 3px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* ---- Detail panel profile header + metrics + reviews ---- */
+.detail-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.detail-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--panel-2);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px var(--line);
+  flex-shrink: 0;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.metric {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+}
+.metric-n {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.metric-l {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.review {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.review:last-child {
+  margin-bottom: 0;
+}
+.review-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.review-av {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.review-who {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.review-role {
+  font-size: 11px;
+  color: var(--muted);
+}
+.review-stars {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 1px;
+  color: #f59e0b;
+}
+.review-text {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.rank-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #b45309;
+  background: var(--balanced-soft);
+  padding: 3px 9px;
+  border-radius: 999px;
+}

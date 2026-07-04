@@ -13,11 +13,11 @@ export default function CoreProblem() {
             <span className="brand-mark" style={{ width: 30, height: 30, borderRadius: 9 }}>
               <Flow width={18} height={18} />
             </span>
-            <span className="nav-brand-name">Mr.&nbsp;Mandi</span>
+            <span className="nav-brand-name">Mistri&nbsp;Mandi</span>
           </Link>
           <div className="nav-links">
             <Link href="/map" className="nav-link hide-sm">
-              <MapPin width={17} height={17} /> Live map
+              <MapPin width={17} height={17} /> Labour Chowk
               <span className="nav-new">New</span>
             </Link>
             <a href="#sources" className="nav-link hide-sm">
@@ -132,7 +132,7 @@ export default function CoreProblem() {
             filtered by trade and skill.
           </p>
           <Link href="/map" className="doc-cta-btn">
-            <MapPin width={16} height={16} /> Open the live map
+            <MapPin width={16} height={16} /> Open Labour Chowk
           </Link>
         </section>
 

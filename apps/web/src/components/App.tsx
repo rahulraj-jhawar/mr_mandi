@@ -53,7 +53,7 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [kinds, setKinds] = useState<Set<HubKind>>(new Set(['source', 'demand', 'balanced']));
   const [trades, setTrades] = useState<Set<Trade>>(new Set());
-  const [showFlows, setShowFlows] = useState(true);
+  const [showFlows, setShowFlows] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [fly, setFly] = useState<FlyTarget | null>(null);
   const [modal, setModal] = useState<{ open: boolean; broker: Broker | null }>({
@@ -86,7 +86,7 @@ export default function App() {
     const b = brokerIndex[id];
     if (!b) return;
     setSelectedId(id);
-    setFly({ lat: b.lat, lng: b.lng, zoom: 7, key: Date.now() });
+    setFly({ lat: b.lat, lng: b.lng, zoom: 9, key: Date.now() });
   };
 
   const toggleKind = (k: HubKind) => {
@@ -133,7 +133,7 @@ export default function App() {
             <Flow width={18} height={18} />
           </span>
           <span className="brand-name">
-            Mr.&nbsp;Mandi <span>{'// labour flow'}</span>
+            Mistri&nbsp;Mandi <span>{'// Labour Chowk'}</span>
           </span>
         </div>
 
@@ -190,17 +190,18 @@ export default function App() {
         </div>
 
         <div className="card card-pad">
-          <div className="toggle-row" style={{ marginBottom: 12 }}>
-            <span className="toggle-label" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <Flow width={15} height={15} style={{ color: 'var(--accent)' }} />
-              Labour flows
+          <button
+            className="checkrow"
+            style={{ marginBottom: 12 }}
+            onClick={() => setShowFlows((s) => !s)}
+            aria-pressed={showFlows}
+          >
+            <span className={`checkbox ${showFlows ? 'on' : ''}`} />
+            <span>
+              <span className="ck-label">Show predictable labour flow</span>
+              <span className="ck-sub">Overlay seasonal source → demand corridors</span>
             </span>
-            <button
-              className={`switch ${showFlows ? 'on' : ''}`}
-              onClick={() => setShowFlows((s) => !s)}
-              aria-label="Toggle labour flows"
-            />
-          </div>
+          </button>
           <div className="legend-item">
             <span className="legend-swatch" style={{ background: 'var(--source)' }} /> Surplus —
             source here
@@ -251,7 +252,7 @@ export default function App() {
       ) : (
         <div className="results card">
           <div className="results-head">
-            <h2>Sourcing partners</h2>
+            <h2>Labour brokers</h2>
             <span className="count">{filtered.length} shown</span>
           </div>
           <div className="results-scroll">
@@ -262,7 +263,19 @@ export default function App() {
             )}
             {filtered.map((b) => (
               <button key={b.id} className="broker-row" onClick={() => select(b.id)}>
-                <div className="broker-row-top">
+                <div className="broker-row-head">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="row-avatar" src={b.photo} alt={b.name} loading="lazy" />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div className="broker-name">{b.name}</div>
+                    <div className="broker-loc" style={{ marginTop: 2 }}>
+                      <MapPin width={12} height={12} />
+                      {b.city}, {b.state}
+                    </div>
+                  </div>
+                  <span className="rank-badge">#{b.rank}</span>
+                </div>
+                <div className="broker-row-top" style={{ marginTop: 9 }}>
                   <span className={`kind-tag kind-${b.kind}`}>{b.kind}</span>
                   {b.verified && (
                     <span className="verified-badge">
@@ -282,11 +295,6 @@ export default function App() {
                     <Star width={13} height={13} style={{ color: '#f59e0b' }} />
                     {b.rating.toFixed(1)}
                   </span>
-                </div>
-                <div className="broker-name">{b.name}</div>
-                <div className="broker-loc" style={{ marginTop: 3 }}>
-                  <MapPin width={13} height={13} />
-                  {b.city}, {b.state}
                 </div>
                 <div className="broker-row-meta">
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>

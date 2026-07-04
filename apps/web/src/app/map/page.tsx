@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import App from '../../components/App';
 
 export const metadata: Metadata = {
-  title: 'Live map // Source verified construction labour across India — Mr. Mandi',
+  title: 'Labour Chowk — verified labour brokers on a live map of India',
   description:
-    'Find verified labour brokers to source skilled, semi-skilled & unskilled construction workers on a beautiful map of India. Predicted labour flows, filter by trade & skill, day-rate ranges, ratings & worker pools.',
+    'Browse verified labour brokers across India on Labour Chowk. See profiles, ratings, reviews and sourcing metrics; filter by trade & skill; toggle predictable seasonal labour flows; and post a requirement to source skilled, semi-skilled & unskilled construction workers.',
+  alternates: { canonical: '/map' },
 };
 
 export default function MapPage() {
