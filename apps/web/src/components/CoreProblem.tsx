@@ -173,6 +173,33 @@ export default function CoreProblem() {
           </div>
         </section>
 
+        {/* Thesis findings (header removed) — sits right below the contrast cards */}
+        <section className="doc-section" style={{ paddingTop: 8 }}>
+          <div className="findings">
+            <div className="finding">
+              <span className="tick">
+                <Check width={15} height={15} />
+              </span>
+              <h4>Read the flow</h4>
+              <p>Predict requirement and supply from historical & seasonal movement data.</p>
+            </div>
+            <div className="finding">
+              <span className="tick">
+                <Check width={15} height={15} />
+              </span>
+              <h4>Point to the source</h4>
+              <p>Show builders the origin regions where labour is surplus and not yet moving.</p>
+            </div>
+            <div className="finding">
+              <span className="tick">
+                <Check width={15} height={15} />
+              </span>
+              <h4>Connect via verified brokers</h4>
+              <p>Bridge the site to vetted sourcing partners on that corridor — on a map of India.</p>
+            </div>
+          </div>
+        </section>
+
         {/* Labour movement map (shared with India on the Move) */}
         <section className="doc-section">
           <div className="doc-section-head">
@@ -256,37 +283,6 @@ export default function CoreProblem() {
                   gap is the product.
                 </p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* What it means */}
-        <section className="doc-section">
-          <div className="doc-section-head">
-            <div className="doc-kicker">The thesis, in one line</div>
-            <h2 className="doc-h2">Source where labour isn’t moving from</h2>
-          </div>
-          <div className="findings">
-            <div className="finding">
-              <span className="tick">
-                <Check width={15} height={15} />
-              </span>
-              <h4>Read the flow</h4>
-              <p>Predict requirement and supply from historical & seasonal movement data.</p>
-            </div>
-            <div className="finding">
-              <span className="tick">
-                <Check width={15} height={15} />
-              </span>
-              <h4>Point to the source</h4>
-              <p>Show builders the origin regions where labour is surplus and not yet moving.</p>
-            </div>
-            <div className="finding">
-              <span className="tick">
-                <Check width={15} height={15} />
-              </span>
-              <h4>Connect via verified brokers</h4>
-              <p>Bridge the site to vetted sourcing partners on that corridor — on a map of India.</p>
             </div>
           </div>
         </section>
