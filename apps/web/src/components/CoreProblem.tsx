@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { CORRIDORS, HEADLINE, SEASONALITY, SOURCE } from '../data/migration';
+import { HEADLINE, SEASONALITY, SOURCE } from '../data/migration';
 import { CENSUS_HEADLINE, CENSUS_SOURCE, REASONS } from '../data/census';
-import { ArrowRight, ArrowUpRight, Check, Flow, MapPin, Users } from './icons';
+import { ArrowRight, ArrowUpRight, Check, Close, Compass, Flow, MapPin, Users } from './icons';
 import SeasonalMapSection from './SeasonalMapSection';
 
 // Source registry — every card cites one of these, linking to the authoritative
@@ -100,17 +100,28 @@ export default function CoreProblem() {
   return (
     <div className="doc">
       <nav className="doc-nav">
-        <div className="doc-nav-inner">
-          <Link href="/" className="doc-link" style={{ paddingLeft: 10 }}>
-            <span className="brand-mark" style={{ width: 24, height: 24, borderRadius: 7 }}>
-              <Flow width={14} height={14} />
+        <div className="navbar">
+          <Link href="/" className="nav-brand">
+            <span className="brand-mark" style={{ width: 30, height: 30, borderRadius: 9 }}>
+              <Flow width={18} height={18} />
             </span>
-            Mr.&nbsp;Mandi
+            <span className="nav-brand-name">Mr.&nbsp;Mandi</span>
           </Link>
-          <span className="spacer" />
-          <Link href="/map" className="doc-link doc-link-primary">
-            <MapPin width={15} height={15} /> Live map
-          </Link>
+          <div className="nav-links">
+            <a href="#evidence" className="nav-link hide-sm">
+              <Compass width={17} height={17} /> Evidence
+            </a>
+            <Link href="/map" className="nav-link hide-sm">
+              <MapPin width={17} height={17} /> Live map
+              <span className="nav-new">New</span>
+            </Link>
+            <a href="#sources" className="nav-link hide-sm">
+              <Flow width={17} height={17} /> Sources
+            </a>
+            <Link href="/map" className="nav-cta">
+              Post a requirement <ArrowRight width={16} height={16} />
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -136,7 +147,9 @@ export default function CoreProblem() {
         <section className="doc-section" style={{ paddingTop: 8 }}>
           <div className="contrast">
             <div className="contrast-card wrong">
-              <div className="contrast-tag">The wrong lens</div>
+              <div className="contrast-tag">
+                <Close width={12} height={12} /> The wrong lens
+              </div>
               <h3>“There aren’t enough workers.”</h3>
               <p>
                 Builders index the workers directly and conclude supply is scarce — chasing the same
@@ -147,7 +160,9 @@ export default function CoreProblem() {
               <ArrowRight width={22} height={22} />
             </div>
             <div className="contrast-card right">
-              <div className="contrast-tag">The real problem</div>
+              <div className="contrast-tag">
+                <Check width={12} height={12} /> The real problem
+              </div>
               <h3>Supply is abundant but mis-matched.</h3>
               <p>
                 Labour is plentiful in specific origin states and moves on predictable, seasonal
@@ -163,11 +178,6 @@ export default function CoreProblem() {
           <div className="doc-section-head">
             <div className="doc-kicker">Watch it move</div>
             <h2 className="doc-h2">Where labour actually is, month by month</h2>
-            <p className="doc-lead">
-              The same movement data, on a map. Red states send workers, green receive them, and the
-              arcs thin and thicken with the season — pick a month to see where supply sits versus
-              where it’s already left. Defaults to the current month.
-            </p>
           </div>
 
           <SeasonalMapSection />
@@ -183,7 +193,7 @@ export default function CoreProblem() {
         </section>
 
         {/* Evidence cards */}
-        <section className="doc-section">
+        <section className="doc-section" id="evidence">
           <div className="doc-section-head">
             <div className="doc-kicker">The evidence</div>
             <h2 className="doc-h2">Six numbers that reframe the shortage</h2>
@@ -205,43 +215,6 @@ export default function CoreProblem() {
                 <SourceLinks src={e.src} />
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* The corridors — shared spine of both datasets */}
-        <section className="doc-section">
-          <div className="doc-section-head">
-            <div className="doc-kicker">Both datasets agree</div>
-            <h2 className="doc-h2">The flows are predictable</h2>
-            <p className="doc-lead">
-              The Census O-D matrix and the Survey’s railway flows point at the same handful of
-              corridors — so supply is not random. You can pre-position against it.
-            </p>
-          </div>
-          <div className="corridor-list">
-            {CORRIDORS.slice(0, 6).map((c, i) => (
-              <div className="corridor" key={`${c.from}-${c.to}`}>
-                <span className="rank">{i + 1}</span>
-                <span className="route">
-                  <span className="o">{c.from}</span>
-                  <ArrowRight width={16} height={16} />
-                  <span className="d">{c.to}</span>
-                </span>
-                <span className="meter">
-                  <span style={{ width: `${c.intensity}%` }} />
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="dual-src">
-            <span>Corroborated by</span>
-            <a href={CENSUS_SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
-              Census 2011 D-series <ArrowUpRight width={12} height={12} />
-            </a>
-            <span className="dot">·</span>
-            <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
-              Economic Survey 2016-17 <ArrowUpRight width={12} height={12} />
-            </a>
           </div>
         </section>
 
@@ -331,7 +304,7 @@ export default function CoreProblem() {
         </section>
 
         {/* Consolidated sources */}
-        <section className="doc-section" style={{ paddingBottom: 12 }}>
+        <section className="doc-section" id="sources" style={{ paddingBottom: 12 }}>
           <div className="doc-kicker" style={{ marginBottom: 14 }}>
             Sources
           </div>
