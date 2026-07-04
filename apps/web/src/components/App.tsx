@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import {
   BROKERS,
@@ -148,11 +147,6 @@ export default function App() {
         </form>
 
         <div className="topbar-spacer" />
-
-        <Link href="/" className="btn btn-ghost hide-sm" style={{ textDecoration: 'none' }}>
-          <Flow width={16} height={16} style={{ color: 'var(--accent)' }} />
-          The problem
-        </Link>
 
         <button className="btn btn-primary" onClick={() => setModal({ open: true, broker: null })}>
           <Plus width={16} height={16} />
