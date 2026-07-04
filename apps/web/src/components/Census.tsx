@@ -48,6 +48,9 @@ export default function Census() {
             Mr.&nbsp;Mandi
           </Link>
           <span className="spacer" />
+          <Link href="/core-problem" className="doc-link hide-sm">
+            The problem
+          </Link>
           <Link href="/india-on-the-move" className="doc-link hide-sm">
             India on the Move
           </Link>

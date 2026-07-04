@@ -1,33 +1,10 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import {
-  CORRIDORS,
-  DESTINATIONS,
-  FINDINGS,
-  HEADLINE,
-  MONTHS,
-  MONTHS_SHORT,
-  MONTH_NOTE,
-  ORIGINS,
-  SEASONALITY,
-  SOURCE,
-  monthlyMoversLakh,
-} from '../data/migration';
+import { CORRIDORS, DESTINATIONS, FINDINGS, HEADLINE, ORIGINS, SOURCE } from '../data/migration';
 import { ArrowRight, Check, Flow, MapPin } from './icons';
-
-const MigrationMap = dynamic(() => import('./MigrationMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="map-loading" style={{ position: 'absolute' }}>
-      <div className="spinner" />
-    </div>
-  ),
-});
-
-const CURRENT_MONTH = new Date().getMonth();
+import SeasonalMapSection from './SeasonalMapSection';
 
 // Count up to `to` once, when first scrolled into view.
 function useCountUp(to: number, decimals = 0) {
@@ -70,8 +47,6 @@ export default function Showcase() {
   }, []);
 
   const [flow, flowRef] = useCountUp(HEADLINE.annualFlowMillions, 0);
-  const [month, setMonth] = useState(CURRENT_MONTH);
-  const isCurrent = month === CURRENT_MONTH;
 
   return (
     <div className="doc">
@@ -88,6 +63,9 @@ export default function Showcase() {
             Mr.&nbsp;Mandi
           </Link>
           <span className="spacer" />
+          <Link href="/core-problem" className="doc-link hide-sm">
+            The problem
+          </Link>
           <Link href="/census-2011" className="doc-link hide-sm">
             Census 2011
           </Link>
@@ -156,70 +134,11 @@ export default function Showcase() {
             <h2 className="doc-h2">Inter-state movement, month by month</h2>
             <p className="doc-lead">
               Labour flows follow the harvest, monsoon and festival calendar. Pick a month to see the
-              seasonal average — how much movement toward the cities a typical{' '}
-              {MONTHS[month]} carries. Defaults to the current month.
+              seasonal average of movement toward the cities. Defaults to the current month.
             </p>
           </div>
 
-          <div className="mig">
-            <div className="mig-map">
-              <MigrationMap month={month} />
-              <div className="mig-legend">
-                <span>
-                  <i style={{ background: '#e11d48' }} /> Sends workers
-                </span>
-                <span>
-                  <i style={{ background: '#16a34a' }} /> Receives workers
-                </span>
-                <span>
-                  <i className="ln" /> Seasonal flow
-                </span>
-              </div>
-            </div>
-
-            <aside className="mig-side">
-              <div className="mig-readout">
-                <div className="mig-month">
-                  {MONTHS[month]}
-                  {isCurrent && <span className="now">now</span>}
-                </div>
-                <div className="mig-figure">
-                  ~{monthlyMoversLakh(month).toFixed(1)}
-                  <small> lakh / month</small>
-                </div>
-                <div className="mig-sub">
-                  est. inter-state movers · seasonal average vs {(SEASONALITY[month] * 100).toFixed(0)}
-                  % of the yearly norm
-                </div>
-                <p className="mig-note">{MONTH_NOTE[month]}</p>
-              </div>
-
-              <div className="mig-picker">
-                <div className="mig-picker-label">Filter by month · seasonal intensity</div>
-                <div className="mig-bars">
-                  {MONTHS_SHORT.map((m, i) => (
-                    <button
-                      key={m}
-                      className={`mig-bar ${i === month ? 'active' : ''} ${
-                        i === CURRENT_MONTH ? 'current' : ''
-                      }`}
-                      onClick={() => setMonth(i)}
-                      title={`${MONTHS[i]} · ${(SEASONALITY[i] * 100).toFixed(0)}%`}
-                      aria-label={MONTHS[i]}
-                    >
-                      <span className="mig-bar-track">
-                        <span
-                          className="mig-bar-fill"
-                          style={{ height: `${(SEASONALITY[i] / 1.3) * 100}%` }}
-                        />
-                      </span>
-                      <span className="mig-bar-lbl">{m[0]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </aside>
-          </div>
+          <SeasonalMapSection />
         </section>
 
         {/* CMM explainer */}
