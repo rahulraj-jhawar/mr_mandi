@@ -2,30 +2,11 @@
 
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
-import {
-  BROKERS,
-  FLOWS,
-  type Broker,
-  type HubKind,
-  type Trade,
-  TRADES,
-  poolTotal,
-  totals,
-} from '../data/labour';
+import { BROKERS, FLOWS, type Broker, type Trade, TRADES, poolTotal } from '../data/labour';
 import type { FlyTarget } from './MapView';
 import DetailPanel from './DetailPanel';
 import RequestModal from './RequestModal';
-import {
-  ArrowRight,
-  ChevronDown,
-  MapPin,
-  Plus,
-  Search,
-  ShieldCheck,
-  Sliders,
-  Star,
-  Users,
-} from './icons';
+import { ArrowRight, ChevronDown, MapPin, Plus, Search, ShieldCheck, Star, Users } from './icons';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
@@ -36,22 +17,12 @@ const MapView = dynamic(() => import('./MapView'), {
   ),
 });
 
-const KINDS: { key: HubKind; label: string; color: string }[] = [
-  { key: 'source', label: 'Source', color: 'var(--source)' },
-  { key: 'demand', label: 'Demand', color: 'var(--demand)' },
-  { key: 'balanced', label: 'Balanced', color: 'var(--balanced)' },
-];
-
 const fmt = (n: number) => n.toLocaleString('en-IN');
-const fmtCompact = (n: number) =>
-  n >= 1000000 ? `${(n / 1000000).toFixed(1)}M` : n >= 1000 ? `${Math.round(n / 1000)}k` : `${n}`;
 
 const brokerIndex: Record<string, Broker> = Object.fromEntries(BROKERS.map((b) => [b.id, b]));
-const T = totals();
 
 export default function App() {
   const [query, setQuery] = useState('');
-  const [kinds, setKinds] = useState<Set<HubKind>>(new Set(['source', 'demand', 'balanced']));
   const [trades, setTrades] = useState<Set<Trade>>(new Set());
   const [showFlows, setShowFlows] = useState(false);
   const [tradeOpen, setTradeOpen] = useState(false);
@@ -65,7 +36,6 @@ export default function App() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return BROKERS.filter((b) => {
-      if (!kinds.has(b.kind)) return false;
       if (trades.size > 0 && !b.trades.some((t) => trades.has(t))) return false;
       if (q) {
         const hay = `${b.name} ${b.city} ${b.state} ${b.trades.join(' ')}`.toLowerCase();
@@ -73,7 +43,7 @@ export default function App() {
       }
       return true;
     });
-  }, [query, kinds, trades]);
+  }, [query, trades]);
 
   const visibleIds = useMemo(() => new Set(filtered.map((b) => b.id)), [filtered]);
   const visibleFlows = useMemo(
@@ -88,15 +58,6 @@ export default function App() {
     if (!b) return;
     setSelectedId(id);
     setFly({ lat: b.lat, lng: b.lng, zoom: 9, key: Date.now() });
-  };
-
-  const toggleKind = (k: HubKind) => {
-    setKinds((prev) => {
-      const next = new Set(prev);
-      if (next.has(k)) next.delete(k);
-      else next.add(k);
-      return next.size === 0 ? new Set(['source', 'demand', 'balanced']) : next;
-    });
   };
 
   const toggleTrade = (t: Trade) => {
@@ -154,61 +115,41 @@ export default function App() {
         </button>
       </div>
 
-      {/* Left filter rail */}
+      {/* Bottom-left filter panel */}
       <div className="filters">
         <div className="card card-pad">
-          <div className="filter-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Sliders width={13} height={13} /> Hub type
+          <div className="trade-dd">
+            <button className="dropdown-toggle" onClick={() => setTradeOpen((o) => !o)}>
+              <span className="filter-title" style={{ margin: 0 }}>
+                Trade
+              </span>
+              <span className="dropdown-value">
+                {trades.size > 0 ? `${trades.size} selected` : 'All trades'}
+                <ChevronDown width={15} height={15} className={tradeOpen ? 'chev open' : 'chev'} />
+              </span>
+            </button>
+            {tradeOpen && (
+              <>
+                <div className="dd-backdrop" onClick={() => setTradeOpen(false)} />
+                <div className="dropdown-menu up">
+                  {TRADES.map((t) => (
+                    <button key={t} className="dropdown-item" onClick={() => toggleTrade(t)}>
+                      <span className={`checkbox sm ${trades.has(t) ? 'on' : ''}`} />
+                      {t}
+                    </button>
+                  ))}
+                  {trades.size > 0 && (
+                    <button className="dropdown-clear" onClick={() => setTrades(new Set())}>
+                      Clear selection
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
-          <div className="chip-row">
-            {KINDS.map((k) => (
-              <button
-                key={k.key}
-                className={`chip ${kinds.has(k.key) ? 'active' : ''}`}
-                onClick={() => toggleKind(k.key)}
-              >
-                <span className="dot" style={{ background: k.color }} />
-                {k.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
-        <div className="card card-pad trade-dd">
-          <button className="dropdown-toggle" onClick={() => setTradeOpen((o) => !o)}>
-            <span className="filter-title" style={{ margin: 0 }}>
-              Trade
-            </span>
-            <span className="dropdown-value">
-              {trades.size > 0 ? `${trades.size} selected` : 'All trades'}
-              <ChevronDown
-                width={15}
-                height={15}
-                className={tradeOpen ? 'chev open' : 'chev'}
-              />
-            </span>
-          </button>
-          {tradeOpen && (
-            <>
-              <div className="dd-backdrop" onClick={() => setTradeOpen(false)} />
-              <div className="dropdown-menu">
-                {TRADES.map((t) => (
-                  <button key={t} className="dropdown-item" onClick={() => toggleTrade(t)}>
-                    <span className={`checkbox sm ${trades.has(t) ? 'on' : ''}`} />
-                    {t}
-                  </button>
-                ))}
-                {trades.size > 0 && (
-                  <button className="dropdown-clear" onClick={() => setTrades(new Set())}>
-                    Clear selection
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+          <div className="filter-divider" />
 
-        <div className="card card-pad">
           <button
             className="checkrow"
             style={{ marginBottom: 12 }}
@@ -232,26 +173,6 @@ export default function App() {
           <div className="legend-item">
             <span className="legend-line" /> Predicted monthly flow
           </div>
-        </div>
-      </div>
-
-      {/* Bottom-left stats */}
-      <div className="stats">
-        <div className="stat">
-          <div className="stat-num">{T.brokers}</div>
-          <div className="stat-label">Broker hubs</div>
-        </div>
-        <div className="stat">
-          <div className="stat-num">{T.states}</div>
-          <div className="stat-label">States</div>
-        </div>
-        <div className="stat">
-          <div className="stat-num">{fmtCompact(T.workers)}</div>
-          <div className="stat-label">Workers mapped</div>
-        </div>
-        <div className="stat">
-          <div className="stat-num">{fmtCompact(T.movement)}/mo</div>
-          <div className="stat-label">Predicted flow</div>
         </div>
       </div>
 

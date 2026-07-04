@@ -7,8 +7,8 @@ import { Compass, MapPin } from './icons';
 // Modelled on nextdoor.company's tab nav: a floating segmented pill of
 // icon + label items with tooltips and an active state.
 const ITEMS = [
-  { href: '/', label: 'Problem', icon: Compass, tip: 'The core problem, explained' },
-  { href: '/map', label: 'Labour Chowk', icon: MapPin, tip: 'Source verified labour brokers on the map' },
+  { href: '/', label: 'Manifesto', icon: Compass, tip: 'Why India isn’t short of labour' },
+  { href: '/labour-chowk', label: 'Labour Chowk', icon: MapPin, tip: 'Source verified labour brokers on the map' },
 ];
 
 export default function AppNav() {

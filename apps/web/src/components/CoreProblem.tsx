@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { SOURCE } from '../data/migration';
-import { CENSUS_SOURCE } from '../data/census';
-import { ArrowRight, ArrowUpRight, Check, Close, Flow, MapPin, Users } from './icons';
+import { ArrowRight, ArrowUpRight, Flow, MapPin, Users } from './icons';
 import SeasonalMapSection from './SeasonalMapSection';
+import Footer from './Footer';
 
 export default function CoreProblem() {
   return (
@@ -15,10 +15,10 @@ export default function CoreProblem() {
             <span className="nav-brand-name">Mistri&nbsp;Mandi</span>
           </Link>
           <div className="nav-links">
-            <Link href="/map" className="nav-link hide-sm">
+            <Link href="/labour-chowk" className="nav-link hide-sm">
               <MapPin width={17} height={17} /> Labour Chowk
             </Link>
-            <Link href="/map" className="nav-cta">
+            <Link href="/labour-chowk" className="nav-cta">
               Post a requirement <ArrowRight width={16} height={16} />
             </Link>
           </div>
@@ -43,38 +43,8 @@ export default function CoreProblem() {
           </h1>
         </header>
 
-        {/* Misdiagnosis vs reality */}
+        {/* Labour movement map */}
         <section className="doc-section" style={{ paddingTop: 8 }}>
-          <div className="contrast">
-            <div className="contrast-card wrong">
-              <div className="contrast-tag">
-                <Close width={12} height={12} /> The wrong lens
-              </div>
-              <h3>“There aren’t enough workers.”</h3>
-              <p>
-                Builders index the workers directly and conclude supply is scarce — chasing the same
-                crews, bidding up rates, stalling sites.
-              </p>
-            </div>
-            <div className="contrast-arrow">
-              <ArrowRight width={22} height={22} />
-            </div>
-            <div className="contrast-card right">
-              <div className="contrast-tag">
-                <Check width={12} height={12} /> The real problem
-              </div>
-              <h3>Supply is abundant but mis-matched.</h3>
-              <p>
-                Labour is plentiful in specific origin states and moves on predictable, seasonal
-                corridors — but there’s no verified way to source it. Distribution, timing and
-                discovery are broken, not the supply.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Labour movement map (shared with India on the Move) */}
-        <section className="doc-section">
           <div className="doc-section-head">
             <div className="doc-kicker">Watch it move</div>
             <h2 className="doc-h2">Where labour actually is, month by month</h2>
@@ -92,68 +62,16 @@ export default function CoreProblem() {
           </div>
         </section>
 
-        {/* The broker insight — sits directly below the map */}
-        <section className="doc-section">
-          <div className="cmm">
-            <div className="doc-kicker" style={{ color: '#93c5fd' }}>
-              The missing layer
-            </div>
-            <h2 className="doc-h2">Why brokers, not databases, solve this</h2>
-            <div className="cmm-steps">
-              <div className="cmm-step">
-                <div className="idx">1</div>
-                <h4>Read the flow</h4>
-                <p>Predict requirement and supply from historical &amp; seasonal movement data.</p>
-              </div>
-              <div className="cmm-step">
-                <div className="idx">2</div>
-                <h4>Point to the source</h4>
-                <p>Show builders the origin regions where labour is surplus and not yet moving.</p>
-              </div>
-              <div className="cmm-step">
-                <div className="idx">3</div>
-                <h4>Connect via verified brokers</h4>
-                <p>Bridge the site to vetted sourcing partners on that corridor — on a map of India.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA */}
         <section className="doc-cta">
-          <h2>See the flows become sourcing</h2>
-          <p>
-            The live map turns these corridors into verified labour brokers you can source from,
-            filtered by trade and skill.
-          </p>
-          <Link href="/map" className="doc-cta-btn">
+          <h2>Mistri Mandi, Your Site never stops</h2>
+          <Link href="/labour-chowk" className="doc-cta-btn" style={{ marginTop: 8 }}>
             <MapPin width={16} height={16} /> Open Labour Chowk
           </Link>
         </section>
-
-        {/* Consolidated sources */}
-        <section className="doc-section" id="sources" style={{ paddingBottom: 12 }}>
-          <div className="doc-kicker" style={{ marginBottom: 14 }}>
-            Sources
-          </div>
-          <div className="src-list">
-            <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-row">
-              <span className="src-tag es">Economic Survey 2016-17</span>
-              <span className="src-row-body">
-                <b>{SOURCE.title}</b> — {SOURCE.publication}, {SOURCE.authority}.
-              </span>
-              <ArrowUpRight width={16} height={16} />
-            </a>
-            <a href={CENSUS_SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-row">
-              <span className="src-tag census">Census 2011</span>
-              <span className="src-row-body">
-                <b>{CENSUS_SOURCE.title}</b> — {CENSUS_SOURCE.publication}, {CENSUS_SOURCE.authority}.
-              </span>
-              <ArrowUpRight width={16} height={16} />
-            </a>
-          </div>
-        </section>
       </div>
+
+      <Footer />
     </div>
   );
 }
