@@ -5,7 +5,7 @@ Turborepo monorepo with a TypeScript frontend and backend. No database.
 ## Stack
 
 - **Turborepo** + **pnpm** workspaces
-- `apps/web` — [Next.js 15](https://nextjs.org) (App Router, React 19) on port **3000**
+- `apps/web` — [Next.js 15](https://nextjs.org) (App Router, React 19) on port **3000** — a full-screen, map-first landing app: builders discover verified labour brokers, see predicted labour flows across India, filter by trade/skill, and request sourcing. Uses [Leaflet](https://leafletjs.com) + CARTO basemap.
 - `apps/api` — [NestJS 11](https://nestjs.com) on port **3001**
 
 ## Getting started
