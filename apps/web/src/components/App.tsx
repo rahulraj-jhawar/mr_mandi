@@ -15,17 +15,7 @@ import {
 import type { FlyTarget } from './MapView';
 import DetailPanel from './DetailPanel';
 import RequestModal from './RequestModal';
-import {
-  ArrowRight,
-  Flow,
-  MapPin,
-  Plus,
-  Search,
-  ShieldCheck,
-  Sliders,
-  Star,
-  Users,
-} from './icons';
+import { ArrowRight, MapPin, Plus, Search, ShieldCheck, Sliders, Star, Users } from './icons';
 
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
@@ -129,9 +119,8 @@ export default function App() {
       {/* Top bar */}
       <div className="topbar">
         <div className="brand">
-          <span className="brand-mark">
-            <Flow width={18} height={18} />
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="brand-logo" src="/logo-mark.png" alt="Mistri Mandi" width={32} height={32} />
           <span className="brand-name">
             Mistri&nbsp;Mandi <span>{'// Labour Chowk'}</span>
           </span>

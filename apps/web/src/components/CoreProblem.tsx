@@ -10,9 +10,8 @@ export default function CoreProblem() {
       <nav className="doc-nav">
         <div className="navbar">
           <Link href="/" className="nav-brand">
-            <span className="brand-mark" style={{ width: 30, height: 30, borderRadius: 9 }}>
-              <Flow width={18} height={18} />
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="brand-logo" src="/logo-mark.png" alt="Mistri Mandi" width={34} height={34} />
             <span className="nav-brand-name">Mistri&nbsp;Mandi</span>
           </Link>
           <div className="nav-links">

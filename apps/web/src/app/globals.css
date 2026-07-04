@@ -2524,3 +2524,34 @@ table.matrix .cell:hover {
   padding: 3px 9px;
   border-radius: 999px;
 }
+
+/* ---- Brand logo image + pointer affordances ---- */
+.brand-logo {
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Ensure every actionable element shows a pointer */
+a,
+button,
+label,
+summary,
+[role='button'],
+.avatar-pin,
+.cluster,
+.chip,
+.seg-btn,
+.mig-bar,
+.broker-row,
+.checkrow,
+.switch,
+.flow-row,
+.detail-close,
+.leaflet-interactive {
+  cursor: pointer;
+}
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
