@@ -2156,3 +2156,115 @@ table.matrix .cell:hover {
   background: var(--accent-soft);
   color: var(--accent);
 }
+
+/* =====================================================================
+   Mobile friendliness
+   ===================================================================== */
+.doc {
+  overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  /* Home / content pages */
+  .doc-inner {
+    padding: 0 16px;
+  }
+  .doc-nav {
+    padding: 10px 10px 0;
+  }
+  .navbar {
+    padding: 8px 8px 8px 12px;
+    gap: 8px;
+  }
+  .nav-brand-name {
+    font-size: 14px;
+  }
+  .nav-cta {
+    padding: 9px 14px;
+    font-size: 13px;
+    margin-left: 0;
+  }
+  .doc-hero {
+    padding: 36px 0 28px;
+  }
+  .hero-headline {
+    font-size: 31px;
+    line-height: 1.16;
+  }
+  .hl {
+    gap: 0.16em;
+    padding: 0.02em 0.34em 0.08em;
+  }
+  .doc-section {
+    padding: 26px 0;
+  }
+  .doc-h2 {
+    font-size: 23px;
+  }
+  .contrast {
+    gap: 12px;
+  }
+  .contrast-card {
+    padding: 22px;
+    border-radius: 18px;
+  }
+  .contrast-card h3 {
+    font-size: 19px;
+  }
+  .cmm {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+  .cmm-steps {
+    gap: 12px;
+  }
+  .doc-cta {
+    padding: 34px 22px;
+    border-radius: 18px;
+  }
+  .doc-cta h2 {
+    font-size: 24px;
+  }
+  .doc-cta p {
+    font-size: 14px;
+  }
+  .mig-map {
+    height: 340px;
+  }
+  .big-num {
+    font-size: 88px;
+  }
+
+  /* Live map page — keep the top controls from overflowing */
+  .topbar {
+    gap: 8px;
+  }
+  .search {
+    display: none;
+  }
+  .topbar-spacer {
+    display: none;
+  }
+  .topbar .btn-primary {
+    margin-left: auto;
+  }
+  .brand-name span {
+    display: none;
+  }
+  .stats {
+    display: none;
+  }
+  /* leave room so the bottom tab nav doesn't cover the last content */
+  .doc-inner > section:last-child {
+    padding-bottom: 84px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-headline {
+    font-size: 27px;
+  }
+  .nav-brand-name {
+    display: none;
+  }
+}
