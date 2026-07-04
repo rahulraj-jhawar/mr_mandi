@@ -149,7 +149,7 @@ export default function App() {
 
         <div className="topbar-spacer" />
 
-        <Link href="/core-problem" className="btn btn-ghost hide-sm" style={{ textDecoration: 'none' }}>
+        <Link href="/" className="btn btn-ghost hide-sm" style={{ textDecoration: 'none' }}>
           <Flow width={16} height={16} style={{ color: 'var(--accent)' }} />
           The problem
         </Link>

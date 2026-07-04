@@ -4,38 +4,28 @@ import { CENSUS_HEADLINE, CENSUS_SOURCE, REASONS } from '../data/census';
 import { ArrowRight, ArrowUpRight, Check, Flow, MapPin } from './icons';
 import SeasonalMapSection from './SeasonalMapSection';
 
-// Source registry — every card cites one of these, with a link to the
-// authoritative source and to our internal deep-dive page.
+// Source registry — every card cites one of these, linking to the authoritative
+// source document.
 interface SrcDef {
   tag: string;
   kind: 'es' | 'census' | 'seasonal';
   url: string;
-  page: string;
-  pageLabel: string;
-  internal?: boolean;
 }
 const SRC: Record<'es' | 'census' | 'seasonal', SrcDef> = {
   es: {
     tag: 'Economic Survey 2016-17',
-    kind: 'es' as const,
+    kind: 'es',
     url: SOURCE.url,
-    page: '/india-on-the-move',
-    pageLabel: 'India on the Move',
   },
   census: {
     tag: 'Census 2011 · D-series',
-    kind: 'census' as const,
+    kind: 'census',
     url: CENSUS_SOURCE.url,
-    page: '/census-2011',
-    pageLabel: 'Census 2011',
   },
   seasonal: {
     tag: 'Seasonal model · harvest & monsoon',
-    kind: 'seasonal' as const,
-    url: '/india-on-the-move',
-    page: '/india-on-the-move',
-    pageLabel: 'Seasonal map',
-    internal: true,
+    kind: 'seasonal',
+    url: SOURCE.url,
   },
 };
 
@@ -99,18 +89,9 @@ function SourceLinks({ src }: { src: keyof typeof SRC }) {
   const s = SRC[src];
   return (
     <div className="card-src">
-      {s.internal ? (
-        <Link href={s.url} className="src-link">
-          <Flow width={12} height={12} /> {s.pageLabel}
-        </Link>
-      ) : (
-        <a href={s.url} target="_blank" rel="noopener noreferrer" className="src-link">
-          Source <ArrowUpRight width={12} height={12} />
-        </a>
-      )}
-      <Link href={s.page} className="src-link ghost">
-        Deep dive <ArrowRight width={12} height={12} />
-      </Link>
+      <a href={s.url} target="_blank" rel="noopener noreferrer" className="src-link">
+        Source <ArrowUpRight width={12} height={12} />
+      </a>
     </div>
   );
 }
@@ -127,13 +108,7 @@ export default function CoreProblem() {
             Mr.&nbsp;Mandi
           </Link>
           <span className="spacer" />
-          <Link href="/india-on-the-move" className="doc-link hide-sm">
-            India on the Move
-          </Link>
-          <Link href="/census-2011" className="doc-link hide-sm">
-            Census 2011
-          </Link>
-          <Link href="/" className="doc-link doc-link-primary">
+          <Link href="/map" className="doc-link doc-link-primary">
             <MapPin width={15} height={15} /> Live map
           </Link>
         </div>
@@ -263,10 +238,6 @@ export default function CoreProblem() {
 
           <div className="dual-src" style={{ marginTop: 16 }}>
             <span>Built from</span>
-            <Link href="/india-on-the-move" className="src-link">
-              <Flow width={12} height={12} /> India on the Move
-            </Link>
-            <span className="dot">·</span>
             <a href={SOURCE.url} target="_blank" rel="noopener noreferrer" className="src-link">
               Economic Survey 2016-17 <ArrowUpRight width={12} height={12} />
             </a>
@@ -355,7 +326,7 @@ export default function CoreProblem() {
             The live map turns these corridors into verified labour brokers you can source from,
             filtered by trade and skill.
           </p>
-          <Link href="/" className="doc-link doc-link-primary">
+          <Link href="/map" className="doc-link doc-link-primary">
             <MapPin width={16} height={16} /> Open the live map
           </Link>
         </section>
@@ -380,25 +351,11 @@ export default function CoreProblem() {
               </span>
               <ArrowUpRight width={16} height={16} />
             </a>
-            <Link href="/india-on-the-move" className="src-row">
-              <span className="src-tag seasonal">Deep dive</span>
-              <span className="src-row-body">
-                <b>India on the Move</b> — railway-flow findings & the month-wise seasonal map.
-              </span>
-              <ArrowRight width={16} height={16} />
-            </Link>
-            <Link href="/census-2011" className="src-row">
-              <span className="src-tag census">Deep dive</span>
-              <span className="src-row-body">
-                <b>Census 2011 D-series</b> — the origin→destination matrix & reason breakdown.
-              </span>
-              <ArrowRight width={16} height={16} />
-            </Link>
           </div>
           <p className="source-note" style={{ borderTop: 'none', paddingTop: 18 }}>
             Headline figures are as reported by the cited sources. Per-state, per-corridor and
-            seasonal magnitudes shown across these pages are indicative indices following the
-            published patterns, not official per-cell counts.
+            seasonal magnitudes shown on this page are indicative indices following the published
+            patterns, not official per-cell counts.
           </p>
         </section>
       </div>
