@@ -15,8 +15,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <HardHat className="h-5 w-5 text-primary-foreground" />
             </div>
             <Link href="/" className="font-bold text-xl tracking-tight flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
-              <span>Shram</span>
-              <span className="text-primary">Setu</span>
+              <span>Mistry</span>
+              <span className="text-primary">Mandi</span>
             </Link>
           </div>
 
@@ -37,9 +37,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <>
                 <Link href="/broker" className={`transition-colors hover:text-foreground/80 ${location === "/broker" ? "text-foreground" : "text-foreground/60"}`}>
                   Dispatcher
-                </Link>
-                <Link href="/broker/directory" className={`transition-colors hover:text-foreground/80 ${location === "/broker/directory" ? "text-foreground" : "text-foreground/60"}`}>
-                  Broker Directory
                 </Link>
               </>
             )}

@@ -72,7 +72,7 @@ export default function BrokerRegister() {
             title: "Registration Successful",
             description: "You have been added to the dispatcher network.",
           });
-          setLocation("/broker/directory");
+          setLocation("/broker");
         },
         onError: () => {
           toast({

@@ -1,57 +1,74 @@
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useListRequirements, useUpdateRequirementStatus, Requirement, getListRequirementsQueryKey } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { MapPin, Users, CalendarDays, Clock, IndianRupee, CheckCircle2, XCircle, Briefcase } from "lucide-react";
+import { MapPin, Users, CalendarDays, Clock, IndianRupee, CheckCircle2, XCircle, Briefcase, Phone } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
+
+const EMPTY: Record<string, { title: string; desc: string }> = {
+  action: { title: "No pending requests", desc: "You're caught up. New requests routed to you will appear here." },
+  accepted: { title: "No accepted bids yet", desc: "Requests you accept will show up here until the crew is delivered." },
+  fulfilled: { title: "No delivered crews yet", desc: "Jobs you mark as delivered will appear here as a record." },
+};
 
 export default function BrokerDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   // In a real app, we'd filter by the logged-in broker ID.
   // Here we just fetch all to demonstrate functionality.
   const { data: requirements, isLoading } = useListRequirements();
   const updateStatus = useUpdateRequirementStatus();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [tab, setTab] = useState("action");
+
+  // On accept: show a reassurance overlay on the tile, then move it to Accepted Bids.
+  const handleAccept = (id: string) => {
+    setConfirmingId(id);
+    setTimeout(() => {
+      handleStatusChange(id, 'accepted');
+      setConfirmingId(null);
+    }, 2500);
+  };
 
   const handleStatusChange = (id: string, newStatus: 'accepted' | 'declined' | 'fulfilled') => {
     setProcessingId(id);
     updateStatus.mutate(
       { id, data: { status: newStatus } },
       {
-        onSuccess: (updatedReq) => {
+        onSuccess: () => {
           toast({
             title: `Requirement ${newStatus}`,
             description: `You have marked the requirement as ${newStatus}.`,
           });
-          
-          // Update cache optimistically
-          queryClient.setQueryData(getListRequirementsQueryKey(), (old: Requirement[] | undefined) => 
+          queryClient.setQueryData(getListRequirementsQueryKey(), (old: Requirement[] | undefined) =>
             old ? old.map(req => req.id === id ? { ...req, status: newStatus } : req) : old
           );
         },
         onError: () => {
-          toast({
-            title: "Action failed",
-            description: "Could not update status. Please try again.",
-            variant: "destructive"
-          });
+          toast({ title: "Action failed", description: "Could not update status. Please try again.", variant: "destructive" });
         },
-        onSettled: () => {
-          setProcessingId(null);
-        }
+        onSettled: () => setProcessingId(null),
       }
     );
   };
 
-  const pendingRequirements = requirements?.filter(r => r.status === 'routed' || r.status === 'pending') || [];
-  const activeRequirements = requirements?.filter(r => r.status === 'accepted') || [];
+  const action = requirements?.filter(r => r.status === 'routed' || r.status === 'pending') || [];
+  const accepted = requirements?.filter(r => r.status === 'accepted') || [];
+  const fulfilled = requirements?.filter(r => r.status === 'fulfilled') || [];
+
+  const TABS = [
+    { key: "action", label: "Action Required", list: action },
+    { key: "accepted", label: "Accepted Bids", list: accepted },
+    { key: "fulfilled", label: "Fulfilled", list: fulfilled },
+  ];
+  const current = TABS.find(t => t.key === tab) ?? TABS[0];
 
   return (
     <Layout>
@@ -61,148 +78,165 @@ export default function BrokerDashboard() {
           <p className="text-muted-foreground mt-1 text-lg">Manage incoming crew requests routed to your agency.</p>
         </div>
 
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              Action Required 
-              {pendingRequirements.length > 0 && (
-                <Badge variant="destructive" className="rounded-full px-2">{pendingRequirements.length}</Badge>
-              )}
-            </h2>
-            
-            {isLoading ? (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Skeleton className="h-64 w-full rounded-lg" />
-              </div>
-            ) : pendingRequirements.length === 0 ? (
-              <Card className="border-dashed border-2 bg-muted/10">
-                <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-                  <Briefcase className="w-8 h-8 text-muted-foreground mb-4" />
-                  <h3 className="text-md font-semibold">No pending requests</h3>
-                  <p className="text-sm text-muted-foreground">You're caught up. New requests routed to you will appear here.</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {pendingRequirements.map((req) => (
-                  <RequirementCard 
-                    key={req.id} 
-                    req={req} 
-                    onAccept={() => handleStatusChange(req.id, 'accepted')}
-                    onDecline={() => handleStatusChange(req.id, 'declined')}
-                    isProcessing={processingId === req.id}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+        <Tabs value={tab} onValueChange={setTab}>
+          <TabsList className="flex-wrap h-auto">
+            {TABS.map(t => (
+              <TabsTrigger key={t.key} value={t.key} className="gap-1.5">
+                {t.label}
+                <span className="text-xs opacity-60">{t.list.length}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
-          <div className="pt-8 border-t border-border/50">
-            <h2 className="text-xl font-semibold mb-4">Active Deployments</h2>
-            {isLoading ? (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Skeleton className="h-64 w-full rounded-lg" />
-              </div>
-            ) : activeRequirements.length === 0 ? (
-               <p className="text-muted-foreground text-sm italic">No active deployments currently.</p>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {activeRequirements.map((req) => (
-                  <RequirementCard 
-                    key={req.id} 
-                    req={req} 
-                    onFulfill={() => handleStatusChange(req.id, 'fulfilled')}
-                    isProcessing={processingId === req.id}
-                    isActive
-                  />
-                ))}
-              </div>
-            )}
+        {isLoading ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {[1, 2, 3].map(i => <Skeleton key={i} className="h-72 w-full rounded-lg" />)}
           </div>
-        </div>
+        ) : current.list.length === 0 ? (
+          <Card className="border-dashed border-2 bg-muted/10">
+            <CardContent className="flex flex-col items-center justify-center p-12 text-center">
+              <Briefcase className="w-8 h-8 text-muted-foreground mb-4" />
+              <h3 className="text-md font-semibold">{EMPTY[tab].title}</h3>
+              <p className="text-sm text-muted-foreground">{EMPTY[tab].desc}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 items-start">
+            {current.list.map((req) => (
+              <RequirementCard
+                key={req.id}
+                req={req}
+                onAccept={() => handleAccept(req.id)}
+                onDecline={() => handleStatusChange(req.id, 'declined')}
+                onFulfill={() => handleStatusChange(req.id, 'fulfilled')}
+                isProcessing={processingId === req.id}
+                confirming={confirmingId === req.id}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </Layout>
   );
 }
 
-function RequirementCard({ 
-  req, 
-  onAccept, 
-  onDecline, 
-  onFulfill, 
+const skillLabel = (s: string) => s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+function compactINR(n: number) {
+  if (n >= 10000000) return `₹${(n / 10000000).toFixed(2)} Cr`;
+  if (n >= 100000) return `₹${(n / 100000).toFixed(2)} L`;
+  return `₹${n.toLocaleString("en-IN")}`;
+}
+
+function RequirementCard({
+  req,
+  onAccept,
+  onDecline,
+  onFulfill,
   isProcessing,
-  isActive = false
-}: { 
-  req: Requirement, 
-  onAccept?: () => void, 
+  confirming = false,
+}: {
+  req: Requirement,
+  onAccept?: () => void,
   onDecline?: () => void,
   onFulfill?: () => void,
   isProcessing: boolean,
-  isActive?: boolean
+  confirming?: boolean,
 }) {
+  const border = req.status === 'accepted' ? 'border-primary/30' : req.status === 'fulfilled' ? 'border-green-500/30' : 'border-amber-500/30';
   return (
-    <Card className={`bg-white shadow-sm border-border/50 ${isActive ? 'border-primary/30' : 'border-amber-500/30'} hover:shadow-md transition-all`}>
-      <CardHeader className="pb-4 border-b border-border/40">
-        <div className="flex justify-between items-start mb-2">
-          <Badge variant="outline" className="text-xs font-semibold tracking-widest uppercase bg-muted/30">
-            {req.skillType.replace('_', ' ')}
-          </Badge>
-          <span className="text-xs font-medium text-muted-foreground">
-            {format(new Date(req.createdAt), 'MMM dd, HH:mm')}
-          </span>
+    <Card className={`relative overflow-hidden bg-white shadow-sm border-border/50 ${border} hover:shadow-md transition-all`}>
+      {confirming && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-white/95 backdrop-blur-sm text-center p-6 animate-in fade-in-0 zoom-in-95 duration-200">
+          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-green-600" />
+          </div>
+          <div>
+            <p className="font-bold text-lg text-foreground">Bid Accepted</p>
+            <p className="text-sm text-muted-foreground mt-1 max-w-[16rem]">
+              {req.companyName} will contact you shortly to coordinate the crew.
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-primary font-medium">
+            <Phone className="w-3.5 h-3.5" /> Keep your phone handy
+          </div>
         </div>
-        <CardTitle className="text-xl">{req.companyName}</CardTitle>
-        <CardDescription className="flex items-center gap-1 mt-1 text-sm text-foreground/70 font-medium">
-          {req.projectName}
-        </CardDescription>
-        <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
-          <MapPin className="w-3 h-3" />
-          {req.siteCity}, {req.siteState}
+      )}
+      <CardHeader className="pb-4 border-b border-border/40">
+        <div className="flex justify-between items-start gap-3">
+          <div className="min-w-0">
+            <CardTitle className="text-xl truncate">{req.companyName}</CardTitle>
+            <CardDescription className="flex items-center gap-1 mt-1 text-sm text-foreground/70 font-medium truncate">
+              {req.projectName}
+            </CardDescription>
+            <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+              <MapPin className="w-3 h-3 shrink-0" />
+              {req.siteCity}, {req.siteState}
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Est. Revenue</div>
+            <div className="text-2xl font-extrabold text-green-700 leading-tight">
+              {compactINR(req.durationDays * req.workersNeeded * req.wagePerDay)}
+            </div>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="pt-4 space-y-4">
-        <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
+        <div className="grid grid-cols-2 gap-y-5 gap-x-2 text-sm">
           <div>
             <span className="text-muted-foreground block text-xs uppercase tracking-wider mb-1">Required</span>
-            <div className="font-semibold flex items-center gap-1.5">
-              <Users className="w-4 h-4 text-primary" /> {req.workersNeeded}
+            <div className="font-bold text-base flex items-center gap-1.5">
+              <Users className="w-4 h-4 text-primary shrink-0" /> {req.workersNeeded} × {skillLabel(req.skillType)}
             </div>
-            <div className="text-[10px] text-muted-foreground mt-0.5 uppercase">{req.laborTier}</div>
           </div>
           <div>
-            <span className="text-muted-foreground block text-xs uppercase tracking-wider mb-1">Wage/Day</span>
-            <div className="font-semibold flex items-center gap-1">
-              <IndianRupee className="w-4 h-4 text-muted-foreground" /> {req.wagePerDay}
+            <span className="text-muted-foreground block text-xs uppercase tracking-wider mb-1">Wage / Day</span>
+            <div className="font-bold text-base flex items-center gap-0.5">
+              <IndianRupee className="w-4 h-4 text-muted-foreground shrink-0" /> {req.wagePerDay}
             </div>
           </div>
           <div>
             <span className="text-muted-foreground block text-xs uppercase tracking-wider mb-1">Starts</span>
-            <div className="font-medium flex items-center gap-1.5">
-              <CalendarDays className="w-4 h-4 text-muted-foreground" />
-              {format(new Date(req.startDate), 'MMM dd')}
+            <div className="font-semibold text-base flex items-center gap-1.5">
+              <CalendarDays className="w-4 h-4 text-muted-foreground shrink-0" />
+              {format(new Date(req.startDate), 'MMM dd, yyyy')}
             </div>
           </div>
           <div>
             <span className="text-muted-foreground block text-xs uppercase tracking-wider mb-1">Duration</span>
-            <div className="font-medium flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-muted-foreground" />
-              {req.durationDays}d
+            <div className="font-semibold text-base flex items-center gap-1.5">
+              <Clock className="w-4 h-4 text-muted-foreground shrink-0" />
+              {req.durationDays} days
             </div>
           </div>
         </div>
       </CardContent>
       <CardFooter className="pt-4 pb-4 border-t border-border/40 bg-muted/10 gap-2 flex-col sm:flex-row">
-        {!isActive ? (
+        {req.status === 'accepted' ? (
+          <Button
+            className="w-full bg-green-600 hover:bg-green-700 text-white"
+            onClick={onFulfill}
+            disabled={isProcessing}
+          >
+            <CheckCircle2 className="w-4 h-4 mr-2" /> Mark Crew Delivered
+          </Button>
+        ) : req.status === 'fulfilled' ? (
+          <div className="w-full flex items-center justify-center gap-2 text-green-700 font-semibold text-sm py-1">
+            <CheckCircle2 className="w-4 h-4" /> Crew Delivered
+          </div>
+        ) : (
           <>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
               onClick={onDecline}
               disabled={isProcessing}
             >
               <XCircle className="w-4 h-4 mr-2" /> Decline
             </Button>
-            <Button 
+            <Button
               className="w-full"
               onClick={onAccept}
               disabled={isProcessing}
@@ -210,14 +244,6 @@ function RequirementCard({
               <CheckCircle2 className="w-4 h-4 mr-2" /> Accept
             </Button>
           </>
-        ) : (
-          <Button 
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-            onClick={onFulfill}
-            disabled={isProcessing}
-          >
-            <CheckCircle2 className="w-4 h-4 mr-2" /> Mark Fulfilled
-          </Button>
         )}
       </CardFooter>
     </Card>

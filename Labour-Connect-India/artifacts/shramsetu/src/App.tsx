@@ -8,7 +8,6 @@ import BuilderDashboard from "./pages/builder/dashboard";
 import BuilderRequirements from "./pages/builder/requirements";
 import PostRequirement from "./pages/builder/post-requirement";
 import BrokerDashboard from "./pages/broker/dashboard";
-import BrokerDirectory from "./pages/broker/directory";
 import BrokerRegister from "./pages/broker/register";
 
 const queryClient = new QueryClient();
@@ -23,7 +22,6 @@ function Router() {
       
       {/* Broker Routes */}
       <Route path="/broker" component={BrokerDashboard} />
-      <Route path="/broker/directory" component={BrokerDirectory} />
       <Route path="/broker/register" component={BrokerRegister} />
 
       <Route component={NotFound} />
