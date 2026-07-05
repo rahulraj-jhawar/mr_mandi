@@ -2892,3 +2892,86 @@ button:disabled,
     height: 420px;
   }
 }
+
+/* ---- SME logo marquee (landing) ---- */
+.sme-marquee-section {
+  padding-top: 12px;
+}
+.sme-marquee-head {
+  margin-bottom: 20px;
+}
+.sme-marquee {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #fff 0%, var(--panel-2) 100%);
+  box-shadow: var(--shadow-sm);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.sme-marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 56px;
+  padding: 28px 32px;
+  animation: sme-marquee-scroll 42s linear infinite;
+  will-change: transform;
+}
+.sme-logo-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  height: 52px;
+  padding: 0 8px;
+}
+.sme-logo {
+  display: block;
+  max-width: 140px;
+  max-height: 44px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.82;
+  filter: grayscale(0.12);
+  transition: opacity 0.18s, filter 0.18s;
+}
+.sme-logo-item:hover .sme-logo {
+  opacity: 1;
+  filter: none;
+}
+@keyframes sme-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sme-marquee {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .sme-marquee-track {
+    animation: none;
+  }
+}
+@media (max-width: 640px) {
+  .sme-marquee-track {
+    gap: 40px;
+    padding: 22px 24px;
+  }
+  .sme-logo-item {
+    min-width: 112px;
+    height: 44px;
+  }
+  .sme-logo {
+    max-width: 112px;
+    max-height: 36px;
+  }
+}

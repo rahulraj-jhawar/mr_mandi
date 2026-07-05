@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, Flow, MapPin, Users } from './icons';
 import ChowkPreview from './ChowkPreview';
 import Footer from './Footer';
+import SmeLogoMarquee from './SmeLogoMarquee';
 
 export default function CoreProblem() {
   return (
@@ -51,6 +52,8 @@ export default function CoreProblem() {
 
           <ChowkPreview />
         </section>
+
+        <SmeLogoMarquee />
 
         {/* CTA */}
         <section className="doc-cta">
