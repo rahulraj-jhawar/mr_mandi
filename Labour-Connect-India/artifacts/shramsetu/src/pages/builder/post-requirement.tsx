@@ -71,16 +71,22 @@ export default function PostRequirement() {
   const form = useForm<RequirementFormValues>({
     resolver: zodResolver(requirementSchema),
     defaultValues: {
-      builderName: "",
-      companyName: "",
-      projectName: "",
-      siteAddress: "",
-      siteCity: "",
-      siteState: "",
+      builderName: "Rajesh Kumar",
+      companyName: "L&T Construction",
+      projectName: "Metro Phase 2 - Line B",
+      siteAddress: "Plot 42, Sector 5, near Andheri Metro station",
+      siteCity: "Mumbai",
+      siteState: "Maharashtra",
       startDate: new Date().toISOString().split("T")[0],
-      durationDays: 30,
-      notes: "",
-      crews: [{ workersNeeded: 10, skillType: "general_labour", laborTier: "unskilled", wagePerDay: 500 }],
+      durationDays: 90,
+      notes: "On-site accommodation and transport provided.",
+      crews: [
+        { workersNeeded: 30, skillType: "mason", laborTier: "skilled", wagePerDay: 780 },
+        { workersNeeded: 20, skillType: "bar_bender", laborTier: "skilled", wagePerDay: 820 },
+        { workersNeeded: 15, skillType: "electrician", laborTier: "skilled", wagePerDay: 900 },
+        { workersNeeded: 40, skillType: "general_labour", laborTier: "unskilled", wagePerDay: 520 },
+        { workersNeeded: 12, skillType: "fitter", laborTier: "semi_skilled", wagePerDay: 700 },
+      ],
     },
   });
 
@@ -114,8 +120,8 @@ export default function PostRequirement() {
         title: `${results.length} crew line${results.length > 1 ? "s" : ""} posted`,
         description: "Routed to the nearest available labour agents.",
       });
-      setTimeout(() => setLeaving(true), 9300);
-      setTimeout(() => setLocation("/requirements"), 10000);
+      setTimeout(() => setLeaving(true), 2600);
+      setTimeout(() => setLocation("/requirements"), 3000);
     } catch {
       toast({
         title: "Submission Failed",
@@ -129,33 +135,19 @@ export default function PostRequirement() {
     const totalWorkers = posted.reduce((s, r) => s + (r.workersNeeded ?? 0), 0);
     return (
       <Layout>
-        <div className="container max-w-screen-md mx-auto p-4 md:p-8 flex items-center justify-center min-h-[60vh]">
-          <Card className={`w-full text-center border-primary border-2 shadow-lg ${leaving ? "animate-out fade-out-0 zoom-out-95 duration-700 fill-mode-forwards" : "animate-in fade-in-0 zoom-in-95 duration-700"}`}>
-            <CardHeader>
-              <div className="mx-auto bg-primary/10 p-4 rounded-full mb-4 w-20 h-20 flex items-center justify-center">
-                <HardHat className="w-10 h-10 text-primary" />
+        <div className="container max-w-sm mx-auto p-6 flex items-center justify-center min-h-[50vh]">
+          <Card className={`w-full text-center border-primary border-2 shadow-lg ${leaving ? "animate-out fade-out-0 zoom-out-95 duration-300 fill-mode-forwards" : "animate-in fade-in-0 zoom-in-95 duration-300"}`}>
+            <CardHeader className="pb-2">
+              <div className="mx-auto bg-primary/10 p-3 rounded-full mb-3 w-12 h-12 flex items-center justify-center">
+                <HardHat className="w-6 h-6 text-primary" />
               </div>
-              <CardTitle className="text-3xl">{posted.length} Crew Line{posted.length > 1 ? "s" : ""} Posted</CardTitle>
-              <CardDescription className="text-lg">
+              <CardTitle className="text-xl">{posted.length} Crew Line{posted.length > 1 ? "s" : ""} Posted</CardTitle>
+              <CardDescription>
                 {totalWorkers} workers requested for {posted[0]?.projectName}.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 pb-8 text-left">
-              {posted.map((r, i) => (
-                <div key={i} className="flex items-center justify-between bg-muted/50 p-4 rounded-lg border border-border/50">
-                  <div>
-                    <p className="font-semibold text-foreground">
-                      {r.workersNeeded} × {skillLabel(r.skillType)}
-                    </p>
-                    <p className="text-sm text-muted-foreground capitalize">{tierLabel(r.laborTier)}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider">Labour Agent</p>
-                    <p className="font-medium text-primary">{r.routedBrokerName || "Pending Match"}</p>
-                  </div>
-                </div>
-              ))}
-              <p className="text-muted-foreground text-center pt-2">Redirecting you to active projects...</p>
+            <CardContent className="pb-5">
+              <p className="text-sm text-muted-foreground">Routing to labour agents — taking you to Active Projects…</p>
             </CardContent>
           </Card>
         </div>

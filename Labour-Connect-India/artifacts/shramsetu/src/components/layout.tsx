@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { HardHat, Truck, Menu, Building, Users } from "lucide-react";
+import { Truck, Menu, Building, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -11,12 +11,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 max-w-screen-2xl items-center px-4 md:px-8">
           <div className="flex items-center gap-2 mr-8">
-            <div className="bg-primary p-1.5 rounded-sm">
-              <HardHat className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <Link href="/" className="font-bold text-xl tracking-tight flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
-              <span>Mistry</span>
-              <span className="text-primary">Mandi</span>
+            <Link href="/" className="font-bold text-xl tracking-tight flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+              <img src="/logo-mark.png" alt="Mistri Mandi" className="h-9 w-9" />
+              <span className="flex items-center gap-1">
+                <span>Mistri</span>
+                <span className="text-primary">Mandi</span>
+              </span>
             </Link>
           </div>
 

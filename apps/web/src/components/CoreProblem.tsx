@@ -18,9 +18,9 @@ export default function CoreProblem() {
             <Link href="/labour-chowk" className="nav-link hide-sm">
               <MapPin width={17} height={17} /> Labour Chowk
             </Link>
-            <Link href="/labour-chowk" className="nav-cta">
+            <a href="https://labour-connect-india.vercel.app/post-requirement" className="nav-cta">
               Post a requirement <ArrowRight width={16} height={16} />
-            </Link>
+            </a>
           </div>
         </div>
       </nav>

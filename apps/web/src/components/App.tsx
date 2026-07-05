@@ -109,10 +109,10 @@ export default function App() {
 
         <div className="topbar-spacer" />
 
-        <button className="btn btn-primary" onClick={() => setModal({ open: true, broker: null })}>
+        <a className="btn btn-primary" href="https://labour-connect-india.vercel.app/post-requirement">
           <Plus width={16} height={16} />
           Post a requirement
-        </button>
+        </a>
       </div>
 
       {/* Bottom-left filter panel */}

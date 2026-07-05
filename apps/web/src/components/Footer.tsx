@@ -19,7 +19,7 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Product</h4>
             <Link href="/labour-chowk">Labour Chowk</Link>
-            <Link href="/labour-chowk">Post a requirement</Link>
+            <a href="https://labour-connect-india.vercel.app/post-requirement">Post a requirement</a>
           </div>
           <div className="footer-col">
             <h4>Company</h4>

@@ -67,8 +67,8 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Slate 50 */
-  --background: 210 40% 98%;
+  /* White — matches the website background */
+  --background: 0 0% 100%;
   /* Slate 900 */
   --foreground: 222 47% 11%;
   /* Slate 200 */
@@ -117,7 +117,8 @@
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
-  --radius: 0.25rem;
+  /* Softened to 14px to match the Mistri Mandi website's rounding */
+  --radius: 0.875rem;
 
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-accent-border: hsl(var(--sidebar-accent));
